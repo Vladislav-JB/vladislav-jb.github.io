@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Веб-ателье — сайты, которые выделяют бизнес</title>
+<meta name="description" content="Премиальные сайты и лендинги для бизнеса: дизайн под нишу, детали, которые создают впечатление. Демо первого экрана — до оплаты, сайт за 1–2 дня.">
+<meta property="og:title" content="Веб-ателье — сайты, которые выделяют бизнес">
+<meta property="og:description" content="Ваш сайт — это ваш статус. Премиальный дизайн, демо до оплаты, сайт за 1–2 дня.">
+<meta property="og:image" content="https://web-atelie.ru/img/og.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b2a22">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b2a22;--bg2:#08201a;--tx:#f3ead0;--ac:#e0bb62;--mut:#a9bcb0;--line:rgba(224,187,98,.35);--b1:#f0d27a;--b2:#b88a2e}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.pat{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='150'%3E%3Cdefs%3E%3Csymbol id='L' viewBox='{{LILY_VB}}'%3E%3Cpath fill='%23e0bb62' d='{{LILY_D}}'/%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23L' x='34' y='6' width='52' height='60'/%3E%3Cuse href='%23L' x='-26' y='81' width='52' height='60'/%3E%3Cuse href='%23L' x='94' y='81' width='52' height='60'/%3E%3C/svg%3E")}
+.vig{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1000px 700px at 50% 40%,transparent 45%,rgba(2,14,10,.7))}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{position:absolute;top:0;left:0;right:0;z-index:5}
+header .wrap{max-width:none;padding:14px 80px;display:flex;align-items:center}
+.logo{display:flex;align-items:center;gap:14px;font:400 30px Forum;color:var(--ac)}
+.logo img{height:96px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 60px}
+.crest{width:auto;height:190px;margin-bottom:26px;filter:drop-shadow(0 0 22px rgba(255,200,90,.35));animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+h1{font:400 clamp(44px,6.7vw,96px)/1 Forum;letter-spacing:.02em}
+h1 span,h2 span{color:var(--ac)}
+.rule{display:flex;align-items:center;gap:18px;justify-content:center;color:var(--ac);margin-top:26px;letter-spacing:.3em;font-size:clamp(15px,1.95vw,28px);font-weight:700;text-transform:uppercase}
+.rule:before,.rule:after{content:"";width:clamp(30px,8vw,120px);height:1px;background:var(--ac);flex:none}
+.lead{font-size:clamp(18px,2.1vw,30px);color:var(--mut);margin:26px auto 0;max-width:1300px}
+.btn{display:inline-block;margin-top:40px;padding:20px 34px;border-radius:999px;font-weight:800;font-size:17px;background:linear-gradient(135deg,var(--b1),var(--b2));color:var(--bg);box-shadow:0 0 30px rgba(255,200,90,.35);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(255,200,90,.55)}
+.btn.ghost{background:none;color:var(--ac);border:1px solid var(--ac);box-shadow:none}
+
+/* sections */
+section{padding:110px 0}
+.sh{text-align:center;margin-bottom:56px}
+h2{font:400 clamp(38px,5vw,64px)/1.05 Forum}
+.sh .rule{font-size:14px;margin-top:18px}
+.sh p{color:var(--mut);font-size:18px;margin-top:16px}
+
+/* works */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.card{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(5,22,17,.6);transition:transform .3s,border-color .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);border-color:var(--ac);box-shadow:0 0 36px rgba(255,200,90,.22)}
+.card .shot{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+.card .shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .6s}
+.card:hover .shot img{transform:scale(1.05)}
+.card .t{padding:18px 20px 20px}
+.card h3{font:400 24px Forum;color:var(--tx)}
+.card p{color:var(--mut);font-size:15px;margin-top:4px}
+.card .go{display:inline-block;margin-top:10px;color:var(--ac);font-weight:700;font-size:14px}
+
+/* features */
+.feat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.f{border:1px solid var(--line);border-radius:12px;padding:30px 24px;text-align:center;background:rgba(5,22,17,.5)}
+.f b{display:block;font:400 48px Forum;color:var(--ac);line-height:1}
+.f h3{font:400 22px Forum;margin:14px 0 8px}
+.f p{color:var(--mut);font-size:15px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;counter-reset:s}
+.st{position:relative;padding:28px 22px;border-top:1px solid var(--ac)}
+.st:before{counter-increment:s;content:counter(s,upper-roman);font:400 40px Forum;color:var(--ac);display:block;margin-bottom:10px}
+.st h3{font:400 24px Forum}
+.st p{color:var(--mut);font-size:15px;margin-top:8px}
+
+/* cta */
+.cta{text-align:center;border:1px solid var(--line);border-radius:16px;padding:70px 24px;background:radial-gradient(600px 300px at 50% 0,rgba(224,187,98,.14),transparent 70%),rgba(5,22,17,.6)}
+.cta img{height:110px;margin:0 auto 20px}
+.cta p{color:var(--mut);font-size:19px;max-width:620px;margin:16px auto 0}
+.cta .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-size:14px;text-align:center}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s}
+.rv.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.crest{animation:none}html{scroll-behavior:auto}}
+
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feat,.steps{grid-template-columns:repeat(2,minmax(0,1fr))}header .wrap{padding:14px 24px}}
+@media (max-width:640px){
+ .grid,.feat,.steps{grid-template-columns:minmax(0,1fr)}
+ .logo{font-size:24px}.logo img{height:70px}
+ .hero{padding:110px 16px 50px}.crest{height:130px}
+ .rule{letter-spacing:.18em;gap:10px}
+ section{padding:70px 0}.wrap{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<div class="pat"></div><div class="vig"></div>
+
+<header><div class="wrap"><a class="logo" href="#"><img src="img/emblem.svg" alt="">Веб-ателье</a></div></header>
+
+<main>
+<div class="hero">
+  <img class="crest" src="img/lily3d.png" alt="Золотая лилия">
+  <h1>Сайты, которые <span>выделяют</span><br>бизнес на фоне остальных</h1>
+  <div class="rule">Ваш сайт — это ваш статус</div>
+  <p class="lead">Премиальный дизайн, детали, которые создают впечатление.</p>
+  <a class="btn" href="#works">Смотреть проекты</a>
+</div>
+
+<section id="works"><div class="wrap">
+  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">12 ниш · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
+  <div class="grid" id="g"></div>
+</div></section>
+
+<section id="why"><div class="wrap">
+  <div class="sh rv"><h2>Почему <span>Веб-ателье</span></h2></div>
+  <div class="feat">
+    <div class="f rv"><b>0 ₽</b><h3>Демо до оплаты</h3><p>Первый экран вашего сайта — бесплатно, ещё до заказа.</p></div>
+    <div class="f rv"><b>1–2</b><h3>дня на сайт</h3><p>От заявки до готового сайта, без долгих брифов.</p></div>
+    <div class="f rv"><b>100%</b><h3>под телефон</h3><p>Большинство клиентов смотрят с телефона — там всё безупречно.</p></div>
+    <div class="f rv"><b>14</b><h3>дней правок</h3><p>После сдачи дорабатываем детали без доплат.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <div class="sh rv"><h2>Как мы <span>работаем</span></h2></div>
+  <div class="steps">
+    <div class="st rv"><h3>Мерки</h3><p>Вы рассказываете о бизнесе: что продаёте, кому и по какой цене.</p></div>
+    <div class="st rv"><h3>Примерка</h3><p>В тот же день — бесплатное демо первого экрана под вашу нишу.</p></div>
+    <div class="st rv"><h3>Пошив</h3><p>За 1–2 дня собираем весь сайт: тексты, фото, формы, адаптив.</p></div>
+    <div class="st rv"><h3>Выход в свет</h3><p>Размещаем на вашем домене, подключаем заявки и аналитику.</p></div>
+  </div>
+</div></section>
+
+<section id="order"><div class="wrap">
+  <div class="cta rv">
+    <img src="img/lily3d.png" alt="">
+    <h2>Выделите свой <span>бизнес</span></h2>
+    <p>Расскажите о вашем деле — пришлю бесплатное демо первого экрана вашего будущего сайта.</p>
+    <div class="row">{{CONTACTS}}</div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">© 2026 Веб-ателье · web-atelie.ru</div></footer>
+
+<script>
+const W=[
+ ['evakuator','Эвакуатор «Буксир»','Лендинг службы эвакуации 24/7'],
+ ['game-provider','Vorotan Games','Игровой провайдер, 3 языка'],
+ ['butik-stomatologiya','Стоматология «Лаванда»','Бутик-клиника с онлайн-записью'],
+ ['yurist-bankrotstvo','Арбитражный юрист','Банкротство и защита бизнеса'],
+ ['kondicionery','Кондиционеры «Норд»','Монтаж и обслуживание'],
+ ['ledger-engine','Tallyn Core','IT-продукт с 3D-анимацией'],
+ ['niderlandskiy-yazyk','Школа «Knus»','Онлайн-школа языка'],
+ ['krasivye-nomera','«Номерок»','Площадка автономеров с фильтрами'],
+ ['avto-iz-azii','Авто из Азии «Паром»','Подбор и доставка авто'],
+ ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа'],
+ ['cvety','Цветы с доставкой','Каталог букетов и заказ'],
+ ['manikyur','Студия «Лунка»','Маникюр, прайс и запись']
+];
+document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

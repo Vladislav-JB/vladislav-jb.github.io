@@ -3,125 +3,170 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Веб-ателье — сайты для бизнеса</title>
-<meta name="description" content="Продающие сайты и лендинги для малого бизнеса: дизайн под нишу, адаптив под телефон, демо до оплаты.">
-<meta property="og:title" content="Веб-ателье — сайты для бизнеса">
-<meta property="og:description" content="Продающие сайты и лендинги: дизайн под вашу нишу, демо до оплаты.">
-<meta property="og:image" content="https://web-atelie.ru/img/evakuator.jpg">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff8a2a'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='16' text-anchor='middle' fill='%230b0b14'%3EВА%3C/text%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+<title>Веб-ателье — сайты, которые выделяют бизнес</title>
+<meta name="description" content="Премиальные сайты и лендинги для бизнеса: дизайн под нишу, детали, которые создают впечатление. Демо первого экрана — до оплаты, сайт за 1–2 дня.">
+<meta property="og:title" content="Веб-ателье — сайты, которые выделяют бизнес">
+<meta property="og:description" content="Ваш сайт — это ваш статус. Премиальный дизайн, демо до оплаты, сайт за 1–2 дня.">
+<meta property="og:image" content="https://web-atelie.ru/img/og.jpg">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b2a22">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0b0b14;--card:#14141f;--line:#26263a;--text:#fff;--mut:#a9a9c0;--acc:#ff8a2a}
-body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+:root{--bg:#0b2a22;--bg2:#08201a;--tx:#f3ead0;--ac:#e0bb62;--mut:#a9bcb0;--line:rgba(224,187,98,.35);--b1:#f0d27a;--b2:#b88a2e}
+html{scroll-behavior:smooth}
+body{font-family:Manrope,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-header{position:sticky;top:0;z-index:5;background:rgba(11,11,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.logo{font:800 18px Unbounded;display:flex;gap:10px;align-items:center}
-.logo i{width:30px;height:30px;border-radius:8px;background:var(--acc);display:inline-block}
-nav a{margin-left:24px;color:var(--mut);font-weight:700}
-nav a:hover{color:#fff}
-.hero{position:relative;padding:110px 0 90px;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(600px 400px at 80% 10%,rgba(255,122,26,.3),transparent 70%),radial-gradient(500px 400px at 0% 100%,rgba(140,90,255,.25),transparent 70%)}
-.hero .wrap{position:relative}
-.tag{display:inline-block;color:var(--acc);border:2px solid var(--acc);border-radius:40px;padding:6px 14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:13px}
-h1{font:800 clamp(38px,6.5vw,76px)/1.05 Unbounded;margin:24px 0;max-width:900px}
-h1 em{font-style:normal;color:var(--acc)}
-.lead{font-size:clamp(17px,2vw,21px);color:var(--mut);max-width:640px}
-.btn{display:inline-block;margin-top:36px;background:var(--acc);color:#0b0b14;font:600 17px Unbounded;padding:18px 30px;border-radius:16px;transition:transform .2s}
-.btn:hover{transform:translateY(-2px)}
-.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:70px}
-.facts div{background:var(--bg);padding:24px}
-.facts b{display:block;font:800 30px Unbounded;color:var(--acc)}
-.facts span{color:var(--mut);font-size:15px}
-section{padding:80px 0}
-h2{font:800 clamp(28px,4vw,44px)/1.1 Unbounded;margin-bottom:14px}
-.sub{color:var(--mut);margin-bottom:40px;font-size:18px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s,border-color .25s}
-.card:hover{transform:translateY(-4px);border-color:var(--acc)}
-.shot{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
-.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .5s}
-.card:hover img{transform:scale(1.04)}
+img{max-width:100%;display:block}
+.pat{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='150'%3E%3Cdefs%3E%3Csymbol id='L' viewBox='0 0 705 816'%3E%3Cpath fill='%23e0bb62' d='M344 808C338 805 329 797 327 792C326 790 324 787 322 786C320 783 310 766 309 760C307 752 303 743 301 742C300 741 296 741 292 741C286 741 284 741 277 737C268 733 258 723 258 719C258 718 257 715 256 714C256 713 255 710 255 708C255 700 253 700 234 699C216 698 215 698 202 692C189 685 180 678 176 670C174 668 172 665 171 662C169 660 168 656 168 654C168 652 167 649 167 648C165 645 165 636 166 633C167 632 168 629 168 627C168 623 173 614 180 605C183 601 191 597 195 597C200 597 207 603 211 612C213 616 217 620 219 623C224 627 224 627 233 627C246 627 257 622 261 615C262 613 263 611 264 610C267 609 270 600 270 594C270 588 270 587 267 585C262 582 251 570 248 566C242 554 248 541 264 533L270 530L270 518C270 511 270 506 269 504C267 499 265 494 264 490C264 489 263 486 262 484C260 479 248 454 245 449C241 444 229 431 225 429C221 427 216 423 212 420C210 419 207 417 206 417C202 416 197 414 192 412C190 411 184 411 169 411C150 411 150 411 142 415C134 420 126 425 126 426C126 427 124 429 121 432C119 435 117 438 117 439C117 441 116 443 115 444C115 445 114 448 114 450C114 452 113 455 112 456C111 459 111 473 112 476C113 478 114 481 114 484C114 488 115 492 116 494C117 496 118 499 119 501C119 503 120 506 121 508C124 516 124 517 119 521C115 525 115 525 106 525C96 524 95 524 80 516C66 510 64 508 56 501C52 498 48 495 46 493C44 492 42 490 41 488C39 486 36 482 33 479C27 472 12 443 12 438C12 436 11 433 11 432C10 431 9 427 9 423C9 419 8 415 8 414C6 411 6 396 7 393C8 392 9 388 9 386C9 383 10 379 11 378C11 377 12 374 12 372C12 370 13 366 15 363C17 360 18 356 18 355C18 354 22 346 24 343C27 339 31 334 33 330C35 326 48 313 53 310C59 307 63 304 65 303C67 301 81 294 83 294C83 294 87 293 90 291C93 289 97 288 99 288C101 288 104 287 105 287C109 284 155 284 159 286C160 287 163 288 165 288C166 288 169 289 171 289C176 291 181 293 184 294C188 295 218 310 223 313C225 315 228 317 230 318C239 325 247 318 242 309C241 308 240 305 240 303C240 301 239 298 239 297C238 296 237 293 237 291C237 289 236 286 236 285C235 283 234 279 234 274C234 270 233 266 233 264C230 260 230 232 232 228C233 226 234 222 234 216C234 210 235 206 236 204C236 203 237 200 237 198C237 196 238 193 239 192C239 191 240 188 240 186C240 185 241 182 241 180C243 175 245 170 246 166C246 165 249 158 252 152C255 146 258 140 258 139C258 138 263 128 264 127C265 127 267 124 269 120C270 117 273 112 275 110C276 108 278 105 279 104C280 102 282 99 283 97C285 95 287 92 288 90C290 87 292 84 293 83C294 81 296 78 299 75C301 72 303 70 303 69C303 68 305 66 308 63C310 60 312 57 312 57C312 56 315 53 318 49C321 46 324 43 324 42C324 41 327 37 332 33C336 29 339 25 339 24C339 22 350 11 353 9C357 8 360 8 364 9C367 11 375 19 375 21C375 21 377 24 379 27C382 30 384 32 384 33C384 34 386 36 388 39C391 42 393 45 393 45C393 46 395 49 398 52C401 55 404 59 405 60C408 65 411 70 416 75C421 82 423 86 427 93C429 97 431 100 432 101C433 101 456 147 456 149C456 149 457 152 459 155C460 158 462 162 462 164C463 167 465 172 467 177C467 179 468 182 468 183C468 185 469 188 470 189C470 190 471 194 471 196C471 199 472 203 472 204C473 206 474 210 474 216C474 222 475 226 476 228C476 230 477 233 477 238C477 244 476 247 476 249C475 251 474 255 474 262C474 270 473 274 472 276C472 277 471 281 471 284C471 286 470 290 470 291C469 292 468 295 468 297C468 299 467 302 466 303C463 309 465 321 470 321C472 321 480 317 482 315C483 313 520 295 526 293C528 292 532 291 534 291C536 291 539 290 541 289C542 289 546 288 549 288C553 288 557 287 558 287C561 285 584 284 587 286C589 287 593 288 597 288C605 289 608 290 618 294C621 296 625 297 626 297C627 297 635 301 638 303C642 306 647 310 651 312C655 314 673 333 677 338C680 342 692 368 694 373C695 375 696 379 696 382C696 386 697 389 698 391C699 394 699 419 698 422C697 424 696 427 696 430C695 438 694 440 687 456C683 464 679 471 676 474C674 477 672 480 672 480C672 482 658 496 654 498C652 499 649 501 648 503C645 505 617 520 608 523C599 526 590 524 588 518C587 516 588 509 590 502C591 500 592 497 592 495C593 493 594 490 595 488C596 486 597 479 597 467C597 450 597 450 593 442C589 435 586 430 582 425C580 422 564 414 554 410C548 408 520 407 516 409C514 410 512 411 510 411C507 411 490 419 482 424C477 428 461 443 459 447C457 451 453 456 450 460C448 463 444 471 444 472C444 473 443 477 441 480C437 490 436 493 435 500C435 503 434 507 433 508C432 509 432 513 432 520L432 530L442 534C450 539 451 540 454 544C457 551 457 562 453 569C451 574 444 579 439 579C438 579 436 580 434 582C430 586 432 602 439 613C445 621 447 622 454 626C465 632 474 632 485 626C493 622 493 622 497 615C503 603 507 598 513 598C517 598 529 605 531 608C532 610 533 613 535 614C536 616 537 618 537 619C537 621 538 623 538 624C540 626 540 630 540 639C540 651 540 651 536 659C534 663 532 667 531 667C530 668 529 670 528 672C527 674 525 677 522 678C520 679 517 681 516 683C513 685 503 691 494 694C492 695 487 696 483 696C479 696 475 697 473 698C470 699 465 699 462 698C458 695 452 696 450 699C449 700 448 703 446 704C444 707 444 708 444 716C444 724 444 724 440 729C433 736 428 738 415 738C408 738 404 738 402 739C400 741 395 752 393 760C392 764 386 776 384 778C383 780 380 783 376 790C373 796 364 805 359 808C353 811 349 811 344 808Z'/%3E%3C/symbol%3E%3C/defs%3E%3Cuse href='%23L' x='34' y='6' width='52' height='60'/%3E%3Cuse href='%23L' x='-26' y='81' width='52' height='60'/%3E%3Cuse href='%23L' x='94' y='81' width='52' height='60'/%3E%3C/svg%3E")}
+.vig{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1000px 700px at 50% 40%,transparent 45%,rgba(2,14,10,.7))}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{position:absolute;top:0;left:0;right:0;z-index:5}
+header .wrap{max-width:none;padding:14px 80px;display:flex;align-items:center}
+.logo{display:flex;align-items:center;gap:14px;font:400 30px Forum;color:var(--ac)}
+.logo img{height:96px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+
+/* hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 60px}
+.crest{width:auto;height:190px;margin-bottom:26px;filter:drop-shadow(0 0 22px rgba(255,200,90,.35));animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+h1{font:400 clamp(44px,6.7vw,96px)/1 Forum;letter-spacing:.02em}
+h1 span,h2 span{color:var(--ac)}
+.rule{display:flex;align-items:center;gap:18px;justify-content:center;color:var(--ac);margin-top:26px;letter-spacing:.3em;font-size:clamp(15px,1.95vw,28px);font-weight:700;text-transform:uppercase}
+.rule:before,.rule:after{content:"";width:clamp(30px,8vw,120px);height:1px;background:var(--ac);flex:none}
+.lead{font-size:clamp(18px,2.1vw,30px);color:var(--mut);margin:26px auto 0;max-width:1300px}
+.btn{display:inline-block;margin-top:40px;padding:20px 34px;border-radius:999px;font-weight:800;font-size:17px;background:linear-gradient(135deg,var(--b1),var(--b2));color:var(--bg);box-shadow:0 0 30px rgba(255,200,90,.35);transition:transform .25s,box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(255,200,90,.55)}
+.btn.ghost{background:none;color:var(--ac);border:1px solid var(--ac);box-shadow:none}
+
+/* sections */
+section{padding:110px 0}
+.sh{text-align:center;margin-bottom:56px}
+h2{font:400 clamp(38px,5vw,64px)/1.05 Forum}
+.sh .rule{font-size:14px;margin-top:18px}
+.sh p{color:var(--mut);font-size:18px;margin-top:16px}
+
+/* works */
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.card{display:block;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:rgba(5,22,17,.6);transition:transform .3s,border-color .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);border-color:var(--ac);box-shadow:0 0 36px rgba(255,200,90,.22)}
+.card .shot{aspect-ratio:16/10;overflow:hidden;border-bottom:1px solid var(--line)}
+.card .shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .6s}
+.card:hover .shot img{transform:scale(1.05)}
 .card .t{padding:18px 20px 20px}
-.card h3{font:600 17px Unbounded;margin-bottom:6px}
-.card p{color:var(--mut);font-size:15px}
-.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
-.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
-.step b{font:800 36px Unbounded;color:var(--acc)}
-.step h3{font:600 18px Unbounded;margin:12px 0 8px}
-.step p{color:var(--mut);font-size:15px}
-.cta{text-align:center;background:linear-gradient(135deg,#1c1320,#141430);border:1px solid var(--line);border-radius:26px;padding:60px 24px}
-.cta p{color:var(--mut);font-size:18px;max-width:560px;margin:0 auto}
-footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mut);font-size:14px}
-.rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.card h3{font:400 24px Forum;color:var(--tx)}
+.card p{color:var(--mut);font-size:15px;margin-top:4px}
+.card .go{display:inline-block;margin-top:10px;color:var(--ac);font-weight:700;font-size:14px}
+
+/* features */
+.feat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.f{border:1px solid var(--line);border-radius:12px;padding:30px 24px;text-align:center;background:rgba(5,22,17,.5)}
+.f b{display:block;font:400 48px Forum;color:var(--ac);line-height:1}
+.f h3{font:400 22px Forum;margin:14px 0 8px}
+.f p{color:var(--mut);font-size:15px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;counter-reset:s}
+.st{position:relative;padding:28px 22px;border-top:1px solid var(--ac)}
+.st:before{counter-increment:s;content:counter(s,upper-roman);font:400 40px Forum;color:var(--ac);display:block;margin-bottom:10px}
+.st h3{font:400 24px Forum}
+.st p{color:var(--mut);font-size:15px;margin-top:8px}
+
+/* cta */
+.cta{text-align:center;border:1px solid var(--line);border-radius:16px;padding:70px 24px;background:radial-gradient(600px 300px at 50% 0,rgba(224,187,98,.14),transparent 70%),rgba(5,22,17,.6)}
+.cta img{height:110px;margin:0 auto 20px}
+.cta p{color:var(--mut);font-size:19px;max-width:620px;margin:16px auto 0}
+.cta .row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-size:14px;text-align:center}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s}
 .rv.on{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
-@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.steps,.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:600px){.grid,.steps{grid-template-columns:minmax(0,1fr)}nav{display:none}.hero{padding:70px 0 60px}section{padding:56px 0}}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}.crest{animation:none}html{scroll-behavior:auto}}
+
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feat,.steps{grid-template-columns:repeat(2,minmax(0,1fr))}header .wrap{padding:14px 24px}}
+@media (max-width:640px){
+ .grid,.feat,.steps{grid-template-columns:minmax(0,1fr)}
+ .logo{font-size:24px}.logo img{height:70px}
+ .hero{padding:110px 16px 50px}.crest{height:130px}
+ .rule{letter-spacing:.18em;gap:10px}
+ section{padding:70px 0}.wrap{padding:0 16px}
+}
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="#"><i></i>Веб-ателье</a>
-<nav><a href="#works">Работы</a><a href="#how">Как работаю</a><a href="#order">Заказать</a></nav></div></header>
+<div class="pat"></div><div class="vig"></div>
 
-<div class="hero"><div class="wrap">
-  <span class="tag">Сайты для бизнеса</span>
-  <h1>Сайт, который <em>приводит клиентов</em>, — за 1–2 дня</h1>
-  <p class="lead">Лендинги и сайты под вашу нишу: тексты, дизайн, адаптив под телефон и заявки прямо в Telegram. Сначала показываю демо — потом вы решаете.</p>
-  <a class="btn" href="#works">Смотреть работы →</a>
-  <div class="facts">
-    <div><b>1–2 дня</b><span>от заявки до сайта</span></div>
-    <div><b>0 ₽</b><span>за демо до заказа</span></div>
-    <div><b>100%</b><span>адаптив под телефон</span></div>
-    <div><b>14 дней</b><span>правки после сдачи</span></div>
-  </div>
-</div></div>
+<header><div class="wrap"><a class="logo" href="#"><img src="img/emblem.svg" alt="">Веб-ателье</a></div></header>
+
+<main>
+<div class="hero">
+  <img class="crest" src="img/lily3d.png" alt="Золотая лилия">
+  <h1>Сайты, которые <span>выделяют</span><br>бизнес на фоне остальных</h1>
+  <div class="rule">Ваш сайт — это ваш статус</div>
+  <p class="lead">Премиальный дизайн, детали, которые создают впечатление.</p>
+  <a class="btn" href="#works">Смотреть проекты</a>
+</div>
 
 <section id="works"><div class="wrap">
-  <h2 class="rv">Работы</h2>
-  <p class="sub rv">Демо-сайты под разные ниши. Названия и контакты в них условные, нажмите, чтобы открыть.</p>
+  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">12 ниш · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
   <div class="grid" id="g"></div>
 </div></section>
 
+<section id="why"><div class="wrap">
+  <div class="sh rv"><h2>Почему <span>Веб-ателье</span></h2></div>
+  <div class="feat">
+    <div class="f rv"><b>0 ₽</b><h3>Демо до оплаты</h3><p>Первый экран вашего сайта — бесплатно, ещё до заказа.</p></div>
+    <div class="f rv"><b>1–2</b><h3>дня на сайт</h3><p>От заявки до готового сайта, без долгих брифов.</p></div>
+    <div class="f rv"><b>100%</b><h3>под телефон</h3><p>Большинство клиентов смотрят с телефона — там всё безупречно.</p></div>
+    <div class="f rv"><b>14</b><h3>дней правок</h3><p>После сдачи дорабатываем детали без доплат.</p></div>
+  </div>
+</div></section>
+
 <section id="how"><div class="wrap">
-  <h2 class="rv">Как работаю</h2>
-  <p class="sub rv">Без долгих брифов и предоплаты «вслепую».</p>
+  <div class="sh rv"><h2>Как мы <span>работаем</span></h2></div>
   <div class="steps">
-    <div class="step rv"><b>01</b><h3>Заявка</h3><p>Рассказываете о бизнесе: что продаёте, кому и по какой цене.</p></div>
-    <div class="step rv"><b>02</b><h3>Демо</h3><p>В тот же день присылаю черновик первого экрана под вашу нишу.</p></div>
-    <div class="step rv"><b>03</b><h3>Сайт</h3><p>За 1–2 дня собираю весь сайт: тексты, фото, формы, телефон.</p></div>
-    <div class="step rv"><b>04</b><h3>Запуск</h3><p>Размещаю на вашем домене, подключаю заявки и Метрику.</p></div>
+    <div class="st rv"><h3>Мерки</h3><p>Вы рассказываете о бизнесе: что продаёте, кому и по какой цене.</p></div>
+    <div class="st rv"><h3>Примерка</h3><p>В тот же день — бесплатное демо первого экрана под вашу нишу.</p></div>
+    <div class="st rv"><h3>Пошив</h3><p>За 1–2 дня собираем весь сайт: тексты, фото, формы, адаптив.</p></div>
+    <div class="st rv"><h3>Выход в свет</h3><p>Размещаем на вашем домене, подключаем заявки и аналитику.</p></div>
   </div>
 </div></section>
 
 <section id="order"><div class="wrap">
   <div class="cta rv">
-    <h2>Нужен сайт?</h2>
-    <p>Напишите, чем занимается ваш бизнес, — пришлю бесплатное демо первого экрана.</p>
-    <a class="btn" href="https://kwork.ru/" target="_blank" rel="noopener">Заказать на Kwork →</a>
+    <img src="img/lily3d.png" alt="">
+    <h2>Выделите свой <span>бизнес</span></h2>
+    <p>Расскажите о вашем деле — пришлю бесплатное демо первого экрана вашего будущего сайта.</p>
+    <div class="row"><a class="btn" href="#works">Смотреть проекты</a></div>
   </div>
 </div></section>
+</main>
 
 <footer><div class="wrap">© 2026 Веб-ателье · web-atelie.ru</div></footer>
 
 <script>
 const W=[
  ['evakuator','Эвакуатор «Буксир»','Лендинг службы эвакуации 24/7'],
- ['game-provider','Vorotan Games','Сайт игрового провайдера на 3 языках'],
- ['kondicionery','Кондиционеры «Норд»','Монтаж и обслуживание, заявки с UTM'],
- ['krasivye-nomera','«Номерок»','Площадка автономеров с фильтрами'],
+ ['game-provider','Vorotan Games','Игровой провайдер, 3 языка'],
+ ['butik-stomatologiya','Стоматология «Лаванда»','Бутик-клиника с онлайн-записью'],
+ ['yurist-bankrotstvo','Арбитражный юрист','Банкротство и защита бизнеса'],
+ ['kondicionery','Кондиционеры «Норд»','Монтаж и обслуживание'],
  ['ledger-engine','Tallyn Core','IT-продукт с 3D-анимацией'],
- ['yurist-bankrotstvo','Арбитражный юрист','Банкротство физлиц, 2 страницы'],
- ['butik-stomatologiya','Стоматология «Лаванда»','Бутик-клиника, онлайн-запись'],
- ['niderlandskiy-yazyk','Школа «Knus»','Онлайн-школа языка, тарифы'],
- ['avto-iz-azii','Авто из Азии «Паром»','Подбор авто, расчёт цены'],
- ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа, запись на курс'],
+ ['niderlandskiy-yazyk','Школа «Knus»','Онлайн-школа языка'],
+ ['krasivye-nomera','«Номерок»','Площадка автономеров с фильтрами'],
+ ['avto-iz-azii','Авто из Азии «Паром»','Подбор и доставка авто'],
+ ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа'],
  ['cvety','Цветы с доставкой','Каталог букетов и заказ'],
  ['manikyur','Студия «Лунка»','Маникюр, прайс и запись']
 ];
-g.innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p></div></a>`).join('');
+document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
