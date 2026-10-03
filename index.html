@@ -164,7 +164,7 @@ const W=[
  ['avto-iz-azii','Авто из Азии «Паром»','Подбор и доставка авто'],
  ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа'],
  ['cvety','Цветы с доставкой','Каталог букетов и заказ'],
- ['manikyur','Студия «Лунка»','Маникюр, прайс и запись']
+ ['manikyur','Студия «Глянец»','Маникюр, прайс и запись']
 ];
 document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
