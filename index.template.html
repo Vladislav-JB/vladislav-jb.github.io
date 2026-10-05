@@ -30,6 +30,15 @@ header{position:absolute;top:0;left:0;right:0;z-index:5}
 header .wrap{max-width:none;padding:14px 80px;display:flex;align-items:center}
 .logo{display:flex;align-items:center;gap:14px;font:400 30px Forum;color:var(--ac)}
 .logo img{height:96px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+/* поле «Проверка сайта» справа вверху – открывает web-atelie.ru/proverka-saita/?url=… в новой вкладке */
+.chk{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.chk label{font:400 20px Forum;color:var(--ac);letter-spacing:.02em}
+.chk .row{display:flex;width:380px;max-width:100%;padding:5px;border:1px solid var(--line);border-radius:999px;background:rgba(5,22,17,.75);box-shadow:0 0 26px rgba(224,187,98,.12);transition:border-color .2s}
+.chk .row:focus-within{border-color:var(--ac)}
+.chk input{flex:1;min-width:0;background:none;border:0;outline:0;padding:0 14px;font:500 15px Manrope,sans-serif;color:var(--tx)}
+.chk input::placeholder{color:#7f948a}
+.chk button{border:0;border-radius:999px;padding:10px 16px;font:800 14px Manrope,sans-serif;color:var(--bg);background:linear-gradient(135deg,var(--b1),var(--b2));cursor:pointer;white-space:nowrap;transition:box-shadow .2s}
+.chk button:hover{box-shadow:0 0 22px rgba(255,200,90,.5)}
 
 /* hero */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:130px 24px 60px}
@@ -94,7 +103,8 @@ footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-siz
 @media (max-width:640px){
  .grid,.feat,.steps{grid-template-columns:minmax(0,1fr)}
  .logo{font-size:24px}.logo img{height:70px}
- .hero{padding:110px 16px 50px}.crest{height:130px}
+ header .wrap{flex-wrap:wrap;row-gap:10px}.chk{margin-left:0;width:100%;align-items:stretch}.chk label{font-size:18px}.chk .row{width:100%}
+ .hero{padding:220px 16px 50px}.crest{height:130px}
  .rule{letter-spacing:.18em;gap:10px}
  section{padding:70px 0}.wrap{padding:0 16px}
 }
@@ -103,7 +113,9 @@ footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-siz
 <body>
 <div class="pat"></div><div class="vig"></div>
 
-<header><div class="wrap"><a class="logo" href="#"><img src="img/emblem.svg" alt="">Веб-ателье</a></div></header>
+<header><div class="wrap"><a class="logo" href="#"><img src="img/emblem.svg" alt="">Веб-ателье</a>
+  <form class="chk" action="/proverka-saita/" method="get" target="_blank"><label for="chk-url">Проверка сайта от Веб-Ателье</label><div class="row"><input id="chk-url" name="url" type="text" inputmode="url" placeholder="Адрес сайта" required><button type="submit">Начать проверку</button></div></form>
+</div></header>
 
 <main>
 <div class="hero">
