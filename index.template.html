@@ -180,7 +180,7 @@ const W=[
  ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа'],
  ['cvety','Цветы с доставкой','Каталог букетов и заказ'],
  ['manikyur','Студия «Глянец»','Маникюр, прайс и запись'],
- ['parikmaherskaya','Парикмахерская «Прядь»','Прайс, мастера и онлайн-запись'],
+ ['parikmaherskaya','Парикмахерская «Локон»','Прайс, мастера и онлайн-запись'],
  ['podolog','Кабинет «Подолог рядом»','Подология: цены и запись на приём']
 ];
 document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
