@@ -189,7 +189,7 @@ const W=[
  ['coworking','Коворкинг «Этаж»','Онлайн-бронирование мест по часам'],
  ['avto-iz-kitaya','«КитайМост»','Каталог авто из Китая с расчётом цены'],
  ['ugaday-pesnyu','«Угадай песню»','Музыкальная игра, 4 режима'],
- ['techcontrol','«ТЕХКОНТРОЛЬ»','Строительная техника под контролем']
+ ['techcontrol','«ТехПарк»','Строительная техника под контролем']
 ];
 document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
