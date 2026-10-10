@@ -129,7 +129,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-siz
 </div>
 
 <section id="works"><div class="wrap">
-  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">22 ниши · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
+  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">23 ниши · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
   <div class="grid" id="g"></div>
 </div></section>
 
@@ -188,7 +188,8 @@ const W=[
  ['atelie','Ателье «Булавка»','Ремонт и пошив, цена до визита'],
  ['coworking','Коворкинг «Этаж»','Онлайн-бронирование мест по часам'],
  ['avto-iz-kitaya','«КитайМост»','Каталог авто из Китая с расчётом цены'],
- ['ugaday-pesnyu','«Угадай песню»','Музыкальная игра, 4 режима']
+ ['ugaday-pesnyu','«Угадай песню»','Музыкальная игра, 4 режима'],
+ ['techcontrol','«ТЕХКОНТРОЛЬ»','Строительная техника под контролем']
 ];
 document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
