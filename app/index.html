@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Веб-ателье – проекты и демо</title>
+<meta name="description" content="Мини-приложение Веб-ателье: коллекция демо-сайтов, как мы работаем, почему мы.">
+<meta name="theme-color" content="#0b2a22">
+<link rel="icon" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Forum&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0b2a22; --bg2: #08201a; --tx: #f3ead0; --ac: #e0bb62; --mut: #a9bcb0; --line: rgba(224, 187, 98, .35); --b1: #f0d27a; --b2: #b88a2e; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: radial-gradient(120% 60% at 50% 0, #11392e 0, var(--bg) 55%, var(--bg2) 100%) fixed; color: var(--tx); font: 500 16px/1.5 Manrope, system-ui, sans-serif; padding-bottom: 92px; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+  .top { position: sticky; top: 0; z-index: 5; background: rgba(8, 32, 26, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .top .wrap { display: flex; align-items: center; gap: 10px; padding-top: 10px; padding-bottom: 10px; }
+  .logo { display: flex; align-items: center; gap: 8px; font-family: Forum, serif; font-size: 24px; letter-spacing: .02em; flex: 1; }
+  .logo img { height: 34px; width: auto; }
+  .top .wrap { flex-wrap: wrap; row-gap: 8px; }
+  .logo { white-space: nowrap; }
+  .nav { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; width: 100%; }
+  .nav a { white-space: nowrap; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); font-size: 13.5px; font-weight: 700; color: var(--mut); }
+  .nav a:hover { color: var(--ac); border-color: var(--ac); }
+  .strip { background: rgba(5, 22, 17, .6); border-bottom: 1px solid var(--line); }
+  .strip .wrap { padding-top: 0; padding-bottom: 0; }
+  .hero { text-align: center; padding: 34px 0 30px; }
+  .crest { height: 108px; width: auto; filter: drop-shadow(0 0 18px rgba(255, 200, 90, .35)); animation: float 5s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-6px); } }
+  h1 { font: 400 29px/1.2 Forum, serif; margin: 14px 0 10px; letter-spacing: .01em; }
+  h1 span, h2 span { color: var(--ac); }
+  .rule { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--ac); }
+  .rule::before, .rule::after { content: ""; height: 1px; width: 34px; background: var(--line); }
+  .lead { color: var(--mut); margin: 12px auto 0; max-width: 34ch; }
+  .btn { display: inline-block; margin-top: 22px; padding: 16px 28px; border-radius: 999px; font-weight: 800; font-size: 16px; background: linear-gradient(135deg, var(--b1), var(--b2)); color: var(--bg); box-shadow: 0 0 28px rgba(255, 200, 90, .32); }
+  .btn:active { transform: scale(.98); }
+  .btn.ghost { background: none; color: var(--ac); border: 1px solid var(--line); box-shadow: none; }
+  section { padding: 34px 0 6px; scroll-margin-top: 66px; }
+  h2 { font: 400 26px/1.2 Forum, serif; margin: 0 0 6px; }
+  .sub { color: var(--mut); font-size: 14.5px; margin: 0 0 16px; }
+  .grid { display: grid; gap: 14px; }
+  .card { display: block; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: rgba(5, 22, 17, .6); transition: transform .25s, border-color .25s, box-shadow .25s; }
+  .card:hover { border-color: var(--ac); box-shadow: 0 0 30px rgba(255, 200, 90, .2); }
+  .card .shot { aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--line); background: #08201a; }
+  .card .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .card .t { padding: 12px 14px 14px; }
+  .card h3 { margin: 0 0 2px; font-size: 17px; }
+  .card p { margin: 0 0 8px; color: var(--mut); font-size: 14px; }
+  .go { color: var(--ac); font-weight: 800; font-size: 14px; }
+  .steps, .feat { display: grid; gap: 12px; }
+  .st, .f { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: rgba(5, 22, 17, .6); }
+  .st { display: flex; gap: 14px; align-items: flex-start; }
+  .st i { font: 400 28px/1 Forum, serif; color: var(--ac); font-style: normal; min-width: 28px; }
+  .st h3, .f h3 { margin: 0 0 2px; font-size: 16.5px; }
+  .st p, .f p { margin: 0; color: var(--mut); font-size: 14.5px; }
+  .f b { display: block; font: 400 32px/1.1 Forum, serif; color: var(--ac); }
+  .feat { grid-template-columns: 1fr 1fr; }
+  .cta { text-align: center; border: 1px solid var(--line); border-radius: 16px; padding: 26px 18px; background: rgba(5, 22, 17, .6); margin-top: 34px; }
+  .cta img { height: 70px; width: auto; }
+  .cta p { color: var(--mut); margin: 6px 0 0; }
+  footer { text-align: center; color: var(--mut); font-size: 13.5px; padding: 28px 0 8px; }
+  .dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: linear-gradient(0deg, var(--bg2) 60%, rgba(8, 32, 26, 0)); }
+  .dock .btn { display: block; max-width: 528px; margin: 0 auto; text-align: center; padding: 15px 16px; }
+  .rv { opacity: 0; transform: translateY(18px); transition: opacity .6s, transform .6s; }
+  .rv.on { opacity: 1; transform: none; }
+  @media (min-width: 640px) { .grid { grid-template-columns: 1fr 1fr; } .wrap { max-width: 760px; } .dock .btn { max-width: 728px; } }
+  @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } .crest { animation: none; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="#top"><img src="../img/emblem.svg" alt="">Веб-ателье</a>
+  <nav class="nav" aria-label="Разделы"><a href="#works">Работы</a><a href="#how">Процесс</a><a href="#why">Почему мы</a></nav>
+</div></header>
+
+<main id="top" class="wrap">
+  <div class="hero">
+    <img class="crest" src="../img/lily3d.png" alt="Золотая лилия">
+    <h1>Сайты, которые <span>выделяют</span> бизнес</h1>
+    <div class="rule">Ваш сайт – ваш статус</div>
+    <p class="lead">Премиальный дизайн и детали, которые создают впечатление. Демо до оплаты.</p>
+    <a class="btn" href="#works">Смотреть проекты</a>
+  </div>
+
+  <section id="works">
+    <h2>Коллекция <span>проектов</span></h2>
+    <p class="sub" id="worksSub">Демо-сайты разных ниш. Названия и контакты в демо условные. Нажмите на карточку, чтобы открыть сайт целиком.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="how">
+    <h2>Как мы <span>работаем</span></h2>
+    <div class="steps">
+      <div class="st rv"><i>1</i><div><h3>Мерки</h3><p>Вы рассказываете о бизнесе: что продаёте, кому и по какой цене.</p></div></div>
+      <div class="st rv"><i>2</i><div><h3>Примерка</h3><p>В тот же день – бесплатное демо первого экрана под вашу нишу.</p></div></div>
+      <div class="st rv"><i>3</i><div><h3>Пошив</h3><p>За 1–2 дня собираем весь сайт: тексты, фото, формы, адаптив.</p></div></div>
+      <div class="st rv"><i>4</i><div><h3>Выход в свет</h3><p>Размещаем на вашем домене, подключаем заявки и аналитику.</p></div></div>
+    </div>
+  </section>
+
+  <section id="why">
+    <h2>Почему <span>Веб-ателье</span></h2>
+    <div class="feat">
+      <div class="f rv"><b>0 ₽</b><h3>Демо до оплаты</h3><p>Первый экран – бесплатно, ещё до заказа.</p></div>
+      <div class="f rv"><b>1–2</b><h3>дня на сайт</h3><p>От заявки до готового сайта.</p></div>
+      <div class="f rv"><b>100%</b><h3>под телефон</h3><p>Большинство клиентов смотрят с телефона.</p></div>
+      <div class="f rv"><b>14</b><h3>дней правок</h3><p>Дорабатываем детали без доплат.</p></div>
+    </div>
+  </section>
+
+  <div class="cta rv">
+    <img src="../img/lily3d.png" alt="">
+    <h2>Выделите свой <span>бизнес</span></h2>
+    <p>Расскажите о вашем деле – пришлю бесплатное демо первого экрана вашего сайта.</p>
+    <a class="btn" href="https://t.me/mrJB555" target="_blank" rel="noopener">Написать в Telegram</a>
+    <br><a class="btn ghost" href="https://web-atelie.ru/" target="_blank" rel="noopener">Открыть сайт web-atelie.ru</a>
+  </div>
+
+  <footer>© 2026 Веб-ателье · web-atelie.ru</footer>
+</main>
+
+<div class="dock"><a class="btn" href="https://t.me/mrJB555" target="_blank" rel="noopener">Написать в Telegram</a></div>
+
+<script>
+(function () {
+  'use strict';
+  /* Запасной список; основной берётся с главной страницы, чтобы новые демо появлялись сами */
+  var FALLBACK = [
+    ['evakuator','Эвакуатор «Буксир»','Лендинг службы эвакуации 24/7'],
+    ['avtomehanik','Автомеханик «AUTO-HELP»','Выездной мастер 24/7'],
+    ['salyuty','Пиротехника «Небосвод»','Оптовый каталог салютов с фильтрами'],
+    ['game-provider','Vorotan Games','Игровой провайдер, 3 языка'],
+    ['butik-stomatologiya','Стоматология «Лаванда»','Бутик-клиника с онлайн-записью'],
+    ['yurist-bankrotstvo','Арбитражный юрист','Банкротство и защита бизнеса'],
+    ['kondicionery','Кондиционеры «Норд»','Монтаж и обслуживание'],
+    ['ledger-engine','Tallyn Core','IT-продукт с 3D-анимацией'],
+    ['niderlandskiy-yazyk','Школа «Knus»','Онлайн-школа языка'],
+    ['krasivye-nomera','«Номерок»','Площадка автономеров с фильтрами'],
+    ['avto-iz-azii','Авто из Азии «Паром»','Подбор и доставка авто'],
+    ['barmenskaya-shkola','Школа «Джиггер»','Барменская школа'],
+    ['cvety','Цветы с доставкой','Каталог букетов и заказ'],
+    ['manikyur','Студия «Глянец»','Маникюр, прайс и запись'],
+    ['parikmaherskaya','Парикмахерская «Локон»','Прайс, мастера и онлайн-запись'],
+    ['podolog','Кабинет «Подолог рядом»','Подология: цены и запись на приём'],
+    ['shinomontazh','Шиномонтаж «Протектор»','Запись на время без очереди'],
+    ['remont-kvartir','Ремонт «Отвес»','Ремонт квартир со сметой по комнатам'],
+    ['atelie','Ателье «Булавка»','Ремонт и пошив, цена до визита'],
+    ['coworking','Коворкинг «Этаж»','Онлайн-бронирование мест по часам'],
+    ['avto-iz-kitaya','«КитайМост»','Каталог авто из Китая с расчётом цены'],
+    ['ugaday-pesnyu','«Угадай песню»','Музыкальная игра, 4 режима'],
+    ['tehpark','«ТехПарк»','Строительная техника под контролем'],
+    ['internet-shop','Internet.shop','Telegram Mini App: магазин цифровых товаров']
+  ];
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function paint(list) {
+    document.getElementById('grid').innerHTML = list.map(function (w) {
+      return '<a class="card rv" href="/' + esc(w[0]) + '/" target="_blank" rel="noopener"><div class="shot"><img src="../img/' + esc(w[0]) + '.jpg" alt="' + esc(w[1]) + '" loading="lazy"></div><div class="t"><h3>' + esc(w[1]) + '</h3><p>' + esc(w[2]) + '</p><span class="go">Открыть сайт →</span></div></a>';
+    }).join('');
+    reveal();
+  }
+  function reveal() {
+    var els = document.querySelectorAll('.rv:not(.on)');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('on'); }); return; }
+    var io = new IntersectionObserver(function (en) {
+      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('on'); io.unobserve(x.target); } });
+    }, { threshold: .08 });
+    els.forEach(function (e) { io.observe(e); });
+  }
+  paint(FALLBACK);
+  fetch('../index.html', { cache: 'no-cache' }).then(function (r) { return r.text(); }).then(function (t) {
+    var m = t.match(/const W=(\[[\s\S]*?\n\]);/);
+    if (!m) return;
+    var list = (new Function('return ' + m[1]))();
+    if (Array.isArray(list) && list.length) paint(list);
+  }).catch(function () {});
+  try { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.ready(); window.Telegram.WebApp.expand(); } } catch (e) {}
+})();
+</script>
+</body>
+</html>
