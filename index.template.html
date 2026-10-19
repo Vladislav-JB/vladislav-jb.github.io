@@ -129,7 +129,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-siz
 </div>
 
 <section id="works"><div class="wrap">
-  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">31 ниш · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
+  <div class="sh rv"><h2>Коллекция <span>проектов</span></h2><div class="rule">39 ниш · демо-сайты</div><p>Названия и контакты в демо условные. Нажмите, чтобы открыть сайт целиком.</p></div>
   <div class="grid" id="g"></div>
 </div></section>
 
@@ -197,7 +197,15 @@ const W=[
  ['metallo-konstruktsiyam','Металлоконструкции «СтальКаркас»','Быстровозводимые здания, калькулятор стоимости'],
  ['zapiska','«Записка»','Telegram Mini App: онлайн-запись и админ-панель'],
  ['balans','«Баланс»','Telegram Mini App: дневник питания и воды, две темы'],
- ['nedvizhimost','Агентство «Ключ»','Аренда и покупка квартир, проверка объектов']
+ ['nedvizhimost','Агентство «Ключ»','Аренда и покупка квартир, проверка объектов'],
+ ['stroiteli-domov','Строительная компания «Опора»','Дома под ключ по смете из договора'],
+ ['stroy-snab','Стройснабжение «Ригель»','Бетон, металл и техника для крупных площадок'],
+ ['taxi-mezhgorod','Такси «Верста»','Межгород по России с фиксированной ценой'],
+ ['ai-novosti','Новости «Сводка»','Сайт на автопилоте: новости собирает ИИ-агент'],
+ ['mebel-magazin','Магазин мебели «Дубрава»','Доставка за 3 дня, сборка бесплатно'],
+ ['doma-krasnodar','Дом 23','Загородные дома под ключ в Краснодаре'],
+ ['kalendari','Календари.про','Квартальные календари для компаний'],
+ ['internet-magazin-pitstsy','Пицца «Печка»','Замороженная пицца с доставкой, партнёрская программа']
 ];
 document.getElementById('g').innerHTML=W.map(([r,n,d])=>`<a class="card rv" href="/${r}/" target="_blank" rel="noopener"><div class="shot"><img src="img/${r}.jpg" alt="${n}" loading="lazy"></div><div class="t"><h3>${n}</h3><p>${d}</p><span class="go">Открыть сайт →</span></div></a>`).join('');
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}}),{threshold:.12});
