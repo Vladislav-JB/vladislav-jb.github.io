@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Охотник · телефон</title>
+<style>
+  body { margin:0; background:#f6f5f2; color:#1f2328; font:16px/1.5 "Segoe UI",system-ui,sans-serif; }
+  .top { background:#14212b; color:#fff; padding:14px 16px; font-weight:700; display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .top small { display:block; font-weight:400; color:#9db4c0; font-size:12px; margin-top:2px; }
+  .top button { border:1px solid #3a5464; background:#1d3240; color:#cfe0ea; border-radius:8px; padding:8px 12px; font-size:13px; flex:none; }
+  .search { padding:10px 12px; background:#fff; border-bottom:1px solid #e6e3dd; position:sticky; top:0; z-index:2; }
+  .search input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #e6e3dd; border-radius:10px; font-size:16px; }
+  .list { padding:8px 12px 50px; }
+  .item { background:#fff; border:1px solid #e6e3dd; border-radius:12px; padding:12px 14px; margin:10px 0; }
+  .item h3 { margin:0; font-size:16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .dot { width:9px; height:9px; border-radius:50%; background:#2f9e44; flex:none; }
+  .addr { color:#6a7077; font-size:13px; margin-top:3px; }
+  .detail { padding:12px 14px 60px; }
+  .back { border:0; background:#eceae6; border-radius:10px; padding:10px 16px; font-size:15px; margin-bottom:12px; }
+  .steps { background:#faf8f4; border:1px dashed #d8d2c8; border-radius:10px; padding:10px 12px; font-size:14px; margin:14px 0 8px; }
+  .steps b { display:block; margin-bottom:3px; }
+  textarea { width:100%; box-sizing:border-box; min-height:230px; border:1px solid #e6e3dd; border-radius:10px; padding:10px; font:15px/1.5 "Segoe UI",system-ui; background:#fff; resize:vertical; }
+  .btn { display:block; width:100%; border:0; border-radius:10px; padding:12px; font-size:16px; background:#2f6fed; color:#fff; margin:10px 0 0; }
+  .btn.gray { background:#eceae6; color:#1f2328; }
+  .btn:disabled { opacity:.5; }
+  .shot { width:100%; border:1px solid #e6e3dd; border-radius:10px; display:block; }
+  .note { font-size:13px; color:#6a7077; margin:6px 0 14px; }
+  h2 { font-size:18px; margin:4px 0 2px; }
+  .log { margin:14px 12px 30px; }
+  .log summary { cursor:pointer; font-size:14px; color:#2f6fed; }
+  .log pre { white-space:pre-wrap; font-size:12px; background:#fff; border:1px solid #e6e3dd; border-radius:10px; padding:10px 12px; }
+</style>
+</head>
+<body>
+<div class="top">
+  <div>Охотник <small id="meta">загружаю…</small></div>
+  <button id="refresh">Обновить</button>
+</div>
+
+<div id="viewList">
+  <div class="search"><input id="q" placeholder="Поиск по названию или улице"></div>
+  <div class="list" id="list"></div>
+  <details class="log"><summary>Лог охоты (с компьютера)</summary><pre id="hlog">…</pre></details>
+</div>
+
+<div id="viewDetail" style="display:none">
+  <div class="detail">
+    <button class="back" id="back">← К списку</button>
+    <h2 id="dTitle"></h2>
+    <div class="addr" id="dAddr"></div>
+
+    <div class="steps"><b>Шаг 1 · Сохрани мокап</b>Нажми на картинку и удерживай → «Сохранить изображение» / «Добавить в Фото».</div>
+    <img class="shot" id="dShot" alt="мокап">
+    <div class="note">Это тот же мокап, что вкладывается в сообщения с компьютера.</div>
+
+    <div class="steps"><b>Шаг 2 · Скопируй текст</b>Нажми «Выделить текст» → во всплывающем меню «Копировать».</div>
+    <textarea id="dText" readonly></textarea>
+    <button class="btn gray" id="selBtn">Выделить текст</button>
+
+    <div class="steps"><b>Шаг 3 · Отправь в мессенджере</b>Telegram / WhatsApp: скрепка → «Галерея» → выбери мокап → в поле подписи зажми → «Вставить» текст → «Отправить» один раз.</div>
+
+    <div class="steps" style="margin-top:24px"><b>Или одной картинкой</b>Текст запекается внутрь: сохрани и отправь как фото, без подписи.</div>
+    <button class="btn" id="bakeBtn">Сделать картинку с текстом</button>
+    <div id="bakeBox"></div>
+  </div>
+</div>
+
+<script>
+let DATA = null, CUR = null, ACC = '';
+let MODE = 'local'; // 'cloud' — опубликованная версия (база из Supabase), 'local' — через сервер компьютера
+
+function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function streetOf(c) {
+  const p = (c.fullAddress || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (p.length >= 2) return p[p.length - 2] + ', ' + p[p.length - 1];
+  return c.fullAddress || 'адрес не указан';
+}
+function siteOf(c) {
+  const b = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
+  if (b) return b.url;
+  const s = (c.socialLinks || []).filter(Boolean).find(l => l.type === 'link' || l.type === 'site');
+  return s ? s.href : null;
+}
+// именительный падеж → винительный для типовых ниш (парикмахерская → парикмахерскую)
+function acc(q) {
+  q = (q || '').trim();
+  if (/а$/.test(q)) return q.slice(0, -1) + 'у';
+  if (/я$/.test(q)) return q.slice(0, -1) + 'ю';
+  return q;
+}
+function tpl(c) {
+  const street = streetOf(c);
+  const first = siteOf(c) ? 'Предлагаю обновить ваш сайт.' : 'Обратил внимание, что отдельного сайта пока нет.';
+  return 'Здравствуйте!\n\nУвидел вашу компанию «' + c.title + '» (' + street + ') на Яндекс.Картах.\n\n' +
+    first + ' Часть клиентов, которые ищут ' + ACC + ' в интернете, может выбирать тех, у кого сразу видны услуги, цены и возможность записаться.\n\n' +
+    'Я делаю сайты для таких компаний. Есть готовый пример с услугами, ценами и онлайн-записью — могу прислать ссылку, если интересно. За 1–2 дня соберу такой же под вас, сначала покажу бесплатно.\n\n' +
+    'Также можно автоматизировать рутину: запись клиентов, напоминания о визитах и ответы на частые вопросы. Это поможет меньше времени тратить на переписку и звонки, снизить количество пропущенных визитов и уделять больше внимания клиентам.\n\n' +
+    'Вот скриншот примера сайта!';
+}
+
+function mockupSrc() {
+  if (MODE === 'cloud' && DATA.mockup && DATA.mockup.data) {
+    return 'data:' + (DATA.mockup.mime || 'image/jpeg') + ';base64,' + DATA.mockup.data;
+  }
+  return '/shot?t=' + Date.now();
+}
+
+async function load() {
+  // опубликованная версия: рядом ../data.json с адресом облака
+  try {
+    const snap = await (await fetch('../data.json')).json();
+    if (snap && snap.meta && snap.meta.cloud) {
+      const cfg = snap.meta.cloud;
+      const H = { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key };
+      const baseRows = await (await fetch(cfg.url + '/rest/v1/base?select=*&id=eq.1', { headers: H })).json();
+      if (!baseRows.length) throw new Error('База ещё не выгружалась из Охотника на ПК');
+      const b = baseRows[0].data || {};
+      const rows = await (await fetch(cfg.url + '/rest/v1/statuses?select=*', { headers: H })).json();
+      const statuses = {};
+      (rows || []).forEach(r => { statuses[r.id] = { status: r.status, updated: r.updated }; });
+      DATA = { meta: b.meta || snap.meta || {}, companies: b.companies || [], statuses, mockup: b.mockup || null };
+      MODE = 'cloud';
+    }
+  } catch (e) { /* локальный сервер или облака ещё нет */ }
+
+  if (MODE === 'local') {
+    const r = await fetch('/api/data');
+    DATA = await r.json();
+    const pre = document.getElementById('hlog');
+    if (pre) pre.textContent = (DATA.meta && DATA.meta.log) || 'лог пуст';
+  }
+  const m = DATA.meta || {};
+  ACC = acc(m.query);
+  document.getElementById('meta').textContent =
+    (m.geo ? m.geo.split('/')[1] : '') + ' · ' + (m.query || '') + ' · ' + DATA.companies.length + ' компаний · ' +
+    (m.collected ? 'собрано ' + new Date(m.collected).toLocaleString('ru-RU') : '');
+  DATA.companies.forEach(c => {
+    c.hasSite = !!siteOf(c);
+    c.st = (DATA.statuses[c.id] || {}).status || 'Новый';
+    c.street = streetOf(c);
+  });
+  if (MODE === 'cloud') loadHlog();
+  render();
+}
+
+async function loadHlog() {
+  const pre = document.getElementById('hlog');
+  if (!pre) return;
+  try {
+    const snap = await (await fetch('../data.json')).json();
+    const cfg = snap.meta.cloud;
+    const H = { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key };
+    const rows = await (await fetch(cfg.url + '/rest/v1/hlog?select=*&order=id.desc&limit=15', { headers: H })).json();
+    pre.textContent = (rows || []).length
+      ? rows.reverse().map(r => r.line).join('\n')
+      : 'лог пуст — охота с компьютера ещё не запускалась';
+  } catch (e) {
+    pre.textContent = 'лог недоступен';
+  }
+}
+
+function render() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const cs = DATA.companies.filter(c =>
+    !q || (c.title + ' ' + (c.fullAddress || '')).toLowerCase().includes(q));
+  document.getElementById('list').innerHTML = cs.map(c =>
+    '<div class="item" data-id="' + esc(c.id) + '">' +
+    '<h3>' + (c.st === 'Отправлено' ? '<span class="dot"></span>' : '') + esc(c.title) + '</h3>' +
+    '<div class="addr">' + esc(c.street) + '</div></div>'
+  ).join('') || '<p class="note">Ничего не нашлось.</p>';
+}
+
+function openDetail(id) {
+  CUR = DATA.companies.find(c => c.id === id);
+  if (!CUR) return;
+  document.getElementById('dTitle').textContent = CUR.title;
+  document.getElementById('dAddr').textContent = CUR.fullAddress || '';
+  document.getElementById('dText').value = tpl(CUR);
+  document.getElementById('dShot').src = mockupSrc();
+  document.getElementById('bakeBox').innerHTML = '';
+  document.getElementById('viewList').style.display = 'none';
+  document.getElementById('viewDetail').style.display = '';
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('list').addEventListener('click', e => {
+  const item = e.target.closest('.item');
+  if (item) openDetail(item.dataset.id);
+});
+document.getElementById('back').addEventListener('click', () => {
+  document.getElementById('viewDetail').style.display = 'none';
+  document.getElementById('viewList').style.display = '';
+  window.scrollTo(0, 0);
+});
+document.getElementById('refresh').addEventListener('click', () => location.reload());
+
+document.getElementById('selBtn').addEventListener('click', () => {
+  const ta = document.getElementById('dText');
+  ta.focus();
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  const b = document.getElementById('selBtn');
+  b.textContent = ok ? 'Скопировано ✓' : 'Выделено — зажми и «Копировать»';
+  setTimeout(() => { b.textContent = 'Выделить текст'; }, 2500);
+});
+
+// «картинка с текстом» прямо в браузере: мокап + белая карточка сообщения под ним
+function wrapLines(ctx, text, maxW) {
+  const out = [];
+  for (const para of String(text).split('\n')) {
+    if (!para) { out.push(''); continue; }
+    let line = '';
+    for (const w of para.split(' ')) {
+      const t = line ? line + ' ' + w : w;
+      if (ctx.measureText(t).width > maxW && line) { out.push(line); line = w; }
+      else line = t;
+    }
+    out.push(line);
+  }
+  return out;
+}
+
+document.getElementById('bakeBtn').addEventListener('click', async () => {
+  const b = document.getElementById('bakeBtn');
+  b.disabled = true; b.textContent = 'Готовлю…';
+  try {
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('мокап не загрузился')); img.src = mockupSrc(); });
+    const W = 1280, PAD = 24, GAP = 18, TXT = 20, LH = 30, MSGPAD = 22;
+    const mockW = W - PAD * 2;
+    const mockH = img.height * (mockW / img.width);
+    const cnv = document.createElement('canvas');
+    const ctx = cnv.getContext('2d');
+    cnv.width = W;
+    ctx.font = TXT + 'px "Segoe UI", system-ui, sans-serif';
+    const lines = wrapLines(ctx, document.getElementById('dText').value, mockW - MSGPAD * 2);
+    const msgH = MSGPAD * 2 + lines.length * LH;
+    cnv.height = PAD + mockH + GAP + msgH + PAD;
+    ctx.fillStyle = '#f2f6f0';
+    ctx.fillRect(0, 0, cnv.width, cnv.height);
+    ctx.drawImage(img, PAD, PAD, mockW, mockH);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(PAD, PAD + mockH + GAP, mockW, msgH);
+    ctx.fillStyle = '#1f2328';
+    ctx.font = TXT + 'px "Segoe UI", system-ui, sans-serif';
+    ctx.textBaseline = 'top';
+    lines.forEach((l, i) => ctx.fillText(l, PAD + MSGPAD, PAD + mockH + GAP + MSGPAD + i * LH));
+    document.getElementById('bakeBox').innerHTML =
+      '<img class="shot" src="' + cnv.toDataURL('image/png') + '">' +
+      '<div class="note">Зажми картинку → «Сохранить» → отправь в чат как фото.</div>';
+  } catch (err) {
+    document.getElementById('bakeBox').innerHTML = '<div class="note">Не вышло: ' + esc(String(err.message || err)) + '</div>';
+  } finally {
+    b.disabled = false; b.textContent = 'Сделать картинку с текстом';
+  }
+});
+
+load();
+</script>
+</body>
+</html>
