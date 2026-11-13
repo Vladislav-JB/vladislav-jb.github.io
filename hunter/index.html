@@ -120,7 +120,7 @@
         <div class="bar" id="pBar"></div>
         <div class="legend" id="pLegend"></div>
         <div class="strows" id="pRows"></div>
-        <div class="note" id="syncNote">Проверяю связь с компьютером…</div>
+        <div class="note" id="syncNote">Проверяю связь с облаком статусов…</div>
       </div>
 
       <div class="panel">
@@ -209,7 +209,8 @@ function acc(q) {
 }
 
 // статусы: снимок + правки из этого браузера (localStorage);
-// если доступен компьютер (туннель из meta.live) — статусы берутся с него и пишутся на него
+// статусы живут в облаке Supabase (meta.cloud) — видны со всех устройств без туннеля;
+// компьютер с meta.live остаётся запасным путём, если облака нет в снимке
 function loadLocalStatuses() {
   try { return JSON.parse(localStorage.getItem('ohotnik_statuses') || '{}'); } catch (e) { return {}; }
 }
@@ -218,9 +219,55 @@ function saveLocalStatuses(st) {
 }
 
 const LIVE = () => (DATA && DATA.meta && DATA.meta.live) || null;
-let SERVER_UP = false;
+const CLOUD = () => (DATA && DATA.meta && DATA.meta.cloud) || null;
+let SERVER_UP = false; // облако (или компьютер, если облака нет) доступен
+
+function cloudHeaders(extra) {
+  const c = CLOUD();
+  return Object.assign({
+    'apikey': c.key,
+    'Authorization': 'Bearer ' + c.key,
+    'Content-Type': 'application/json',
+  }, extra || {});
+}
 
 async function syncFromServer() {
+  const c = CLOUD();
+  if (c) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(c.url + '/rest/v1/statuses?select=*', { headers: cloudHeaders(), signal: ctrl.signal });
+      clearTimeout(t);
+      if (!r.ok) throw new Error('bad status ' + r.status);
+      const rows = await r.json();
+      // строки облака: {id, status, updated}; статус с более свежим updated важнее
+      for (const row of rows) {
+        if (!row || !row.id) continue;
+        const s = DATA.statuses[row.id];
+        if (!s || !s.updated || String(row.updated || '') >= String(s.updated)) {
+          DATA.statuses[row.id] = { status: row.status, updated: row.updated || '' };
+        }
+      }
+      SERVER_UP = true;
+      // перенос: статусы, проставленные в этом браузере раньше (облако о них не знает или старее), отправляем в облако
+      const local = loadLocalStatuses();
+      for (const [id, v] of Object.entries(local)) {
+        const s = DATA.statuses[id];
+        if (v && v.status && (!s || !s.updated || String(v.updated || '') > String(s.updated))) {
+          await pushStatusToServer(id, v.status);
+          DATA.statuses[id] = { status: v.status, updated: v.updated || new Date().toISOString() };
+        }
+      }
+      updateSyncNote();
+      return SERVER_UP;
+    } catch (e) {
+      SERVER_UP = false;
+      updateSyncNote();
+      return false;
+    }
+  }
+  // запасной путь без облака: компьютер из meta.live (туннель)
   const live = LIVE();
   if (!live) { SERVER_UP = false; updateSyncNote(); return false; }
   try {
@@ -232,7 +279,6 @@ async function syncFromServer() {
     const j = await r.json();
     Object.assign(DATA.statuses, j.statuses || {});
     SERVER_UP = true;
-    // перенос: статусы, проставленные в этом браузере раньше (сервер о них не знает), отправляем на компьютер
     const local = loadLocalStatuses();
     for (const [id, v] of Object.entries(local)) {
       const s = DATA.statuses[id];
@@ -252,11 +298,35 @@ function updateSyncNote() {
   const el = document.getElementById('syncNote');
   if (!el) return;
   el.textContent = SERVER_UP
-    ? '✓ Статусы синхронизированы с компьютером: то, что проставлено здесь, видно на всех устройствах (и в Охотнике на ПК).'
-    : 'Компьютер недоступен (выключен или туннель не запущен): статусы меняются только в этом браузере. Когда компьютер снова будет онлайн и страницу обновят — статусы подтянутся с него.';
+    ? '✓ Статусы в облаке: то, что проставлено здесь, видно на всех устройствах — телефоне, ноутбуке и ПК, без запущенного компьютера.'
+    : 'Облако недоступно (нет интернета или ключ изменился): статусы меняются только в этом браузере. Когда связь появится и страницу обновят — статусы подтянутся из облака.';
 }
 
 async function pushStatusToServer(id, status) {
+  const c = CLOUD();
+  if (c) {
+    try {
+      const updated = new Date().toISOString();
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(c.url + '/rest/v1/statuses', {
+        method: 'POST',
+        headers: cloudHeaders({ 'Prefer': 'resolution=merge-duplicates' }),
+        body: JSON.stringify({ id, status, updated }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(t);
+      if (!r.ok) throw new Error('bad status ' + r.status);
+      SERVER_UP = true;
+      const local = loadLocalStatuses();
+      local[id] = { status, updated };
+      saveLocalStatuses(local);
+    } catch (e) {
+      SERVER_UP = false;
+    }
+    updateSyncNote();
+    return;
+  }
   const live = LIVE();
   if (!live) return;
   try {
