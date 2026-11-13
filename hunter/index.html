@@ -3,235 +3,446 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Охотник · телефон</title>
+<title>Охотник</title>
+<script src="xlsx.full.min.js"></script>
 <style>
-  body { margin:0; background:#f6f5f2; color:#1f2328; font:16px/1.5 "Segoe UI",system-ui,sans-serif; }
-  .top { background:#14212b; color:#fff; padding:14px 16px; font-weight:700; }
-  .top small { display:block; font-weight:400; color:#9db4c0; font-size:12px; margin-top:2px; }
-  .search { padding:10px 12px; background:#fff; border-bottom:1px solid #e6e3dd; position:sticky; top:0; z-index:2; }
-  .search input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #e6e3dd; border-radius:10px; font-size:16px; }
-  .list { padding:8px 12px 50px; }
-  .item { background:#fff; border:1px solid #e6e3dd; border-radius:12px; padding:12px 14px; margin:10px 0; }
-  .item h3 { margin:0; font-size:16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .dot { width:9px; height:9px; border-radius:50%; background:#2f9e44; flex:none; }
-  .addr { color:#6a7077; font-size:13px; margin-top:3px; }
-  .detail { padding:12px 14px 60px; }
-  .back { border:0; background:#eceae6; border-radius:10px; padding:10px 16px; font-size:15px; margin-bottom:12px; }
-  .steps { background:#faf8f4; border:1px dashed #d8d2c8; border-radius:10px; padding:10px 12px; font-size:14px; margin:14px 0 8px; }
-  .steps b { display:block; margin-bottom:3px; }
-  textarea { width:100%; box-sizing:border-box; min-height:230px; border:1px solid #e6e3dd; border-radius:10px; padding:10px; font:15px/1.5 "Segoe UI",system-ui; background:#fff; resize:vertical; }
-  .btn { display:block; width:100%; border:0; border-radius:10px; padding:12px; font-size:16px; background:#2f6fed; color:#fff; margin:10px 0 0; }
-  .btn.gray { background:#eceae6; color:#1f2328; }
-  .btn:disabled { opacity:.5; }
-  .shot { width:100%; border:1px solid #e6e3dd; border-radius:10px; display:block; }
-  .note { font-size:13px; color:#6a7077; margin:6px 0 14px; }
-  h2 { font-size:18px; margin:4px 0 2px; }
+  :root {
+    --bg: #f6f5f2; --card: #ffffff; --ink: #1f2328; --soft: #6a7077;
+    --line: #e6e3dd; --accent: #2f6fed; --ok: #1a7f37; --warn: #b35900; --dark: #14212b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
+  .top { background: var(--dark); color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .top h1 { margin: 0; font-size: 21px; font-weight: 700; }
+  .top .meta { color: #9db4c0; font-size: 13px; flex: 1; min-width: 200px; }
+  .tabs { display: flex; gap: 6px; }
+  .tab { border: 1px solid #3a4c5a; background: transparent; color: #cfdbe2; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
+  .tab.on { background: #fff; color: var(--dark); border-color: #fff; font-weight: 600; }
+  .counters { display: flex; gap: 12px; padding: 14px 24px 0; flex-wrap: wrap; }
+  .counter { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; min-width: 120px; }
+  .counter b { display: block; font-size: 24px; }
+  .counter span { font-size: 12px; color: var(--soft); }
+  .filters { display: flex; gap: 8px; align-items: center; padding: 14px 24px; flex-wrap: wrap; position: sticky; top: 0; background: var(--bg); z-index: 5; border-bottom: 1px solid var(--line); }
+  .chip { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+  .chip.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .filters select { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; background: var(--card); }
+  .list { padding: 8px 24px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 14px 0; }
+  .card.sent { border-left: 4px solid var(--ok); }
+  .card.work { border-left: 4px solid var(--warn); }
+  .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .num { color: var(--soft); font-size: 13px; min-width: 40px; }
+  .head h3 { margin: 0; font-size: 17px; }
+  .rating { color: var(--soft); font-size: 13px; }
+  .rating b { color: var(--ink); }
+  .addr { color: var(--soft); font-size: 13px; margin: 2px 0 8px; }
+  .row-label { font-size: 11px; letter-spacing: .06em; color: var(--soft); text-transform: uppercase; margin: 10px 0 4px; }
+  .pill { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 12px; margin-right: 6px; }
+  .no-site { background: #fdecea; color: #b3261e; }
+  .has-site { background: #e6f4ea; color: var(--ok); }
+  .booking { background: #e8f0fe; color: #1a56b8; }
+  .msg-btn { display: inline-block; border: 1px solid var(--line); background: #fafafa; border-radius: 8px; padding: 5px 12px; font-size: 13px; text-decoration: none; color: var(--ink); margin: 0 6px 6px 0; }
+  .msg-btn:hover { border-color: var(--accent); color: var(--accent); }
+  textarea { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 13px/1.5 "Segoe UI", system-ui; resize: vertical; background: #fcfcfb; }
+  .actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+  .btn { border: 0; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; background: var(--accent); color: #fff; text-decoration: none; display: inline-block; }
+  .btn.gray { background: #eceae6; color: var(--ink); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .card select { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; }
+  .hook { background: #faf8f4; border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #4a4640; margin-top: 8px; }
+  .hook i { color: var(--soft); font-style: normal; font-size: 12px; }
+  .foot { color: var(--soft); font-size: 12px; padding: 10px 24px 30px; }
+  /* пульт */
+  .pult { padding: 8px 24px 60px; max-width: 980px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin: 14px 0; }
+  .panel h2 { margin: 0 0 12px; font-size: 16px; }
+  .bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: #eee; }
+  .bar div { height: 100%; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--soft); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+  .strows { margin-top: 10px; }
+  .strow { display: flex; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; flex-wrap: wrap; }
+  .strow .nm { flex: 1; min-width: 180px; }
+  .strow .sub { color: var(--soft); font-size: 12px; }
+  .strow select { border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: 12px; }
+  .shotimg { border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; max-width: 100%; }
+  .note { font-size: 12px; color: var(--soft); margin-top: 6px; }
+  code { background: #f1efea; border-radius: 4px; padding: 1px 6px; font-size: 12px; }
 </style>
 </head>
 <body>
-<div class="top">Охотник <small id="meta"></small></div>
-
-<div id="viewList">
-  <div class="search"><input id="q" placeholder="Поиск по названию или улице"></div>
-  <div class="list" id="list"></div>
-</div>
-
-<div id="viewDetail" style="display:none">
-  <div class="detail">
-    <button class="back" id="back">← К списку</button>
-    <h2 id="dTitle"></h2>
-    <div class="addr" id="dAddr"></div>
-
-    <div class="steps"><b>Шаг 1 · Сохрани мокап</b>Нажми на картинку и удерживай → «Сохранить изображение» / «Добавить в Фото».</div>
-    <img class="shot" id="dShot" alt="мокап">
-    <div class="note">Фирменный мокап «Веб-Ателье» — тот же, что вкладывается в сообщения.</div>
-
-    <div class="steps"><b>Шаг 2 · Скопируй текст</b>Нажми «Скопировать текст» (или «Выделить», если браузер запретил).</div>
-    <textarea id="dText" readonly></textarea>
-    <button class="btn gray" id="selBtn">Скопировать текст</button>
-
-    <div class="steps"><b>Шаг 3 · Отправь в мессенджере</b>Telegram / WhatsApp: скрепка → «Галерея» → мокап → в поле подписи зажми → «Вставить» текст → «Отправить» один раз.</div>
-
-    <div class="steps" style="margin-top:24px"><b>Или одной картинкой</b>Текст запекается в мокап прямо на телефоне: сохрани и отправь как фото, без подписи.</div>
-    <button class="btn" id="bakeBtn">Сделать картинку с текстом</button>
-    <div id="bakeBox"></div>
+  <div class="top">
+    <h1 id="title">Охотник</h1>
+    <div class="meta" id="meta"></div>
+    <div class="tabs">
+      <button class="tab on" data-tab="hunt">Охотник</button>
+      <button class="tab" data-tab="pult">Пульт</button>
+    </div>
   </div>
-</div>
+
+  <!-- ОХОТНИК -->
+  <div id="view-hunt">
+    <div class="counters" id="counters"></div>
+    <div class="filters">
+      <button class="chip on" data-f="all">Все</button>
+      <button class="chip" data-f="nosite">Без сайта</button>
+      <button class="chip" data-f="writeto">Есть куда написать</button>
+      <button class="chip" data-f="notsent">Ещё не отправлено</button>
+      <span style="flex:1"></span>
+      <label style="font-size:13px;color:var(--soft)">Статус
+        <select id="fStatus">
+          <option value="">любой</option>
+          <option>Новый</option><option>В работе</option><option>Отправлено</option>
+          <option>В разговоре</option><option>Отказ</option>
+        </select>
+      </label>
+      <label style="font-size:13px;color:var(--soft)">Сортировка
+        <select id="fSort">
+          <option value="idx">по порядку</option>
+          <option value="rating">по рейтингу</option>
+          <option value="reviews">по отзывам</option>
+        </select>
+      </label>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="foot">
+      Подготовка сообщений — по утверждённому шаблону (название, улица, ниша; при найденном сайте — согласованная замена «Предлагаю обновить ваш сайт.»).
+      Порядок отправки: «Скопировать картинку» → Ctrl+V в чат → щёлкни поле «Подпись» → «Скопировать текст» → Ctrl+V → «Отправить» один раз.
+      Отправка вручную и по одной; интервалы: ВК ~1/10 мин, WhatsApp ~1/30 мин, Telegram ~1/час. Зелёная строка = уже отправляли, повторно первым сообщением не пишем.
+    </div>
+  </div>
+
+  <!-- ПУЛЬТ -->
+  <div id="view-pult" style="display:none">
+    <div class="pult">
+      <div class="panel">
+        <h2>Итоги охоты</h2>
+        <div class="bar" id="pBar"></div>
+        <div class="legend" id="pLegend"></div>
+        <div class="strows" id="pRows"></div>
+        <div class="note">Статусы, проставленные здесь, хранятся в этом браузере (не переносятся в Охотник на компьютере).</div>
+      </div>
+
+      <div class="panel">
+        <h2>Мокап для сообщений</h2>
+        <div class="inline">
+          <a class="btn gray" href="mockup.jpg" target="_blank" rel="noopener">Открыть / скачать</a>
+        </div>
+        <div id="shotBox"></div>
+        <div class="note">Фирменный мокап «Веб-Ателье», который вкладывается в первое сообщение. Обновляется на компьютере (кнопки «Сделать скриншот» / «Взять этот файл») и попадает сюда при обновлении снимка.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Сбор новой базы</h2>
+        <div class="note" style="font-size:13px">Сбор базы идёт на компьютере: там запущен Охотник (<code>node server.js</code> → Пульт → «Собрать» — нужен браузер и Яндекс). После сбора обнови эту страницу:</div>
+        <div class="note" style="font-size:13px;margin-top:10px"><code>node publish.js</code> → <code>git add hunter</code> → <code>git commit -m "Охотник: снимок"</code> → <code>git push</code> — и через минуту данные здесь свежие.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Экспорт</h2>
+        <button class="btn" id="xlsxGo">Скачать Excel (xlsx)</button>
+        <div class="note">Все колонки базы + статусы (включая проставленные в этом браузере). Открывается в Excel/LibreOffice.</div>
+      </div>
+    </div>
+  </div>
 
 <script>
-let META = null, COMPANIES = [], STATUSES = {}, CUR = null, ACC = '';
+const STATUSES = ['Новый', 'В работе', 'Отправлено', 'В разговоре', 'Отказ'];
+const ST_COLORS = { 'Новый': '#c9d3da', 'В работе': '#e8a13d', 'Отправлено': '#2f9e44', 'В разговоре': '#4dabf7', 'Отказ': '#adb5bd' };
+let DATA = null, ACC = 'парикмахерскую';
+let filter = 'all', fStatus = '', fSort = 'idx';
 
-function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+const tpl = (c, street) => {
+  const first = c.hasSite
+    ? 'Предлагаю обновить ваш сайт.'
+    : 'Обратил внимание, что отдельного сайта пока нет.';
+  return `Здравствуйте!
+
+Увидел вашу компанию «${c.title}» (${street}) на Яндекс.Картах.
+
+${first} Часть клиентов, которые ищут ${ACC} в интернете, может выбирать тех, у кого сразу видны услуги, цены и возможность записаться.
+
+Я делаю сайты для таких компаний. Есть готовый пример с услугами, ценами и онлайн-записью — могу прислать ссылку, если интересно. За 1–2 дня соберу такой же под вас, сначала покажу бесплатно.
+
+Также можно автоматизировать рутину: запись клиентов, напоминания о визитах и ответы на частые вопросы. Это поможет меньше времени тратить на переписку и звонки, снизить количество пропущенных визитов и уделять больше внимания клиентам.
+
+Вот скриншот примера сайта!`;
+};
+
 function streetOf(c) {
   const p = (c.fullAddress || '').split(',').map(s => s.trim()).filter(Boolean);
   if (p.length >= 2) return p[p.length - 2] + ', ' + p[p.length - 1];
   return c.fullAddress || 'адрес не указан';
 }
+
+function channelsOf(c) {
+  const out = [];
+  const social = (c.socialLinks || []).filter(Boolean);
+  const phones = (c.phones || []).filter(Boolean);
+  const wa = social.find(l => l.type === 'whatsapp');
+  if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href });
+  else if (phones.length) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + phones[0].replace(/\D/g, '') });
+  const tg = social.find(l => l.type === 'telegram');
+  if (tg && tg.href) out.push({ name: 'Telegram', href: tg.href });
+  else if (phones.length) out.push({ name: 'Telegram', href: 'https://t.me/' + phones[0].replace(/\D/g, '') });
+  const vk = social.find(l => l.type === 'vkontakte');
+  if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
+  return out;
+}
+
 function siteOf(c) {
   const b = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
   if (b) return b.url;
   const s = (c.socialLinks || []).filter(Boolean).find(l => l.type === 'link' || l.type === 'site');
   return s ? s.href : null;
 }
+
+function hasBooking(c) {
+  return (c.businessLinks || []).filter(Boolean).some(l => l.type === 'booking');
+}
+
 function acc(q) {
   q = (q || '').trim();
   if (/а$/.test(q)) return q.slice(0, -1) + 'у';
   if (/я$/.test(q)) return q.slice(0, -1) + 'ю';
   return q;
 }
-function tpl(c) {
-  const street = streetOf(c);
-  const first = siteOf(c) ? 'Предлагаю обновить ваш сайт.' : 'Обратил внимание, что отдельного сайта пока нет.';
-  return 'Здравствуйте!\n\nУвидел вашу компанию «' + c.title + '» (' + street + ') на Яндекс.Картах.\n\n' +
-    first + ' Часть клиентов, которые ищут ' + ACC + ' в интернете, может выбирать тех, у кого сразу видны услуги, цены и возможность записаться.\n\n' +
-    'Я делаю сайты для таких компаний. Есть готовый пример с услугами, ценами и онлайн-записью — могу прислать ссылку, если интересно. За 1–2 дня соберу такой же под вас, сначала покажу бесплатно.\n\n' +
-    'Также можно автоматизировать рутину: запись клиентов, напоминания о визитах и ответы на частые вопросы. Это поможет меньше времени тратить на переписку и звонки, снизить количество пропущенных визитов и уделять больше внимания клиентам.\n\n' +
-    'Вот скриншот примера сайта!';
+
+// статусы: снимок + правки из этого браузера (localStorage)
+function loadLocalStatuses() {
+  try { return JSON.parse(localStorage.getItem('ohotnik_statuses') || '{}'); } catch (e) { return {}; }
+}
+function saveLocalStatuses(st) {
+  try { localStorage.setItem('ohotnik_statuses', JSON.stringify(st)); } catch (e) {}
 }
 
-const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent((META && META.collected) || '1');
+const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent((DATA.meta && DATA.meta.collected) || '1');
 
 async function load() {
   const r = await fetch('data.json');
-  const d = await r.json();
-  META = d.meta || {};
-  COMPANIES = d.companies || [];
-  STATUSES = d.statuses || {};
-  ACC = acc(META.query);
+  DATA = await r.json();
+  const m = DATA.meta || {};
+  ACC = acc(m.query) || ACC;
+  document.getElementById('title').textContent =
+    'Охотник · ' + (m.geo ? m.geo.split('/')[1] : '') + ' · ' + (m.query || '');
   document.getElementById('meta').textContent =
-    (META.geo ? META.geo.split('/')[1] : '') + ' · ' + (META.query || '') + ' · ' + COMPANIES.length + ' компаний' +
-    (META.collected ? ' · от ' + new Date(META.collected).toLocaleDateString('ru-RU') : '');
-  COMPANIES.forEach(c => {
+    'собрано ' + (m.collected ? new Date(m.collected).toLocaleString('ru-RU') : '') +
+    ' · снимок для web-atelie.ru/hunter · открытые данные Яндекс.Карт';
+  const st = Object.assign({}, DATA.statuses || {}, loadLocalStatuses());
+  DATA.statuses = st;
+  DATA.companies.forEach(c => {
     c.hasSite = !!siteOf(c);
-    c.st = (STATUSES[c.id] || {}).status || 'Новый';
+    c.channels = channelsOf(c);
+    c.st = (st[c.id] || {}).status || 'Новый';
     c.street = streetOf(c);
   });
+  renderCounters();
   render();
+  renderPult();
+  const img = new Image();
+  img.onload = () => { document.getElementById('shotBox').innerHTML = '<img class="shotimg" src="' + mockSrc() + '" width="640">'; };
+  img.src = mockSrc();
+}
+
+function statusClass(st) {
+  if (st === 'Отправлено') return 'sent';
+  if (st === 'В работе' || st === 'В разговоре') return 'work';
+  return '';
+}
+
+function renderCounters() {
+  const cs = DATA.companies;
+  const noSite = cs.filter(c => !c.hasSite).length;
+  const write = cs.filter(c => c.channels.length).length;
+  const sent = cs.filter(c => c.st === 'Отправлено').length;
+  document.getElementById('counters').innerHTML =
+    cnt(cs.length, 'всего в базе') + cnt(noSite, 'без сайта') +
+    cnt(write, 'есть куда написать') + cnt(sent, 'отправлено');
+}
+const cnt = (n, label) => `<div class="counter"><b>${n}</b><span>${label}</span></div>`;
+
+function visible() {
+  let cs = DATA.companies;
+  if (filter === 'nosite') cs = cs.filter(c => !c.hasSite);
+  if (filter === 'writeto') cs = cs.filter(c => c.channels.length);
+  if (filter === 'notsent') cs = cs.filter(c => c.st !== 'Отправлено');
+  if (fStatus) cs = cs.filter(c => c.st === fStatus);
+  if (fSort === 'rating') cs = [...cs].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  if (fSort === 'reviews') cs = [...cs].sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+  return cs;
 }
 
 function render() {
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  const cs = COMPANIES.filter(c =>
-    !q || (c.title + ' ' + (c.fullAddress || '')).toLowerCase().includes(q));
-  document.getElementById('list').innerHTML = cs.map(c =>
-    '<div class="item" data-id="' + esc(c.id) + '">' +
-    '<h3>' + (c.st === 'Отправлено' ? '<span class="dot"></span>' : '') + esc(c.title) + '</h3>' +
-    '<div class="addr">' + esc(c.street) + '</div></div>'
-  ).join('') || '<p class="note">Ничего не нашлось.</p>';
+  const cs = visible();
+  document.getElementById('list').innerHTML = cs.map((c, i) => {
+    const msg = tpl(c, c.street);
+    const hook = (c.reviewSnippets || [])[0];
+    const prices = (c.prices || []).slice(0, 4).map(p => p.name + ': ' + p.value).join(' · ');
+    return `<div class="card ${statusClass(c.st)}" data-id="${c.id}">
+      <div class="head">
+        <span class="num">№${i + 1}</span>
+        <h3>${esc(c.title)}</h3>
+        <span class="rating"><b>${c.rating ?? '—'}</b> · ${(c.reviews || 0)} отзывов</span>
+      </div>
+      <div class="addr">${esc(c.fullAddress || '')}</div>
+      <div>
+        ${c.hasSite
+          ? `<span class="pill has-site">сайт есть</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`
+          : '<span class="pill no-site">сайта нет</span>'}
+        ${hasBooking(c) ? '<span class="pill booking">онлайн-запись в Яндексе</span>' : ''}
+      </div>
+      <div class="row-label">Куда написать</div>
+      <div>
+        ${c.channels.length
+          ? c.channels.map(ch => `<a class="msg-btn" target="_blank" rel="noopener" href="${esc(ch.href)}">${ch.name}</a>`).join('')
+          : (c.phones && c.phones.length ? '<span style="font-size:13px;color:var(--soft)">только телефон: ' + esc(c.phones.join(', ')) + '</span>' : '<span style="font-size:13px;color:var(--soft)">контакт для сообщений не найден</span>')}
+      </div>
+      ${prices ? `<div class="row-label">Цены</div><div style="font-size:13px">${esc(prices)}</div>` : ''}
+      ${hook ? `<div class="hook"><i>крючок из отзывов:</i> «${esc(hook.slice(0, 220))}…»</div>` : ''}
+      <div class="row-label">Сообщение (утверждённый шаблон)</div>
+      <textarea data-ta="${c.id}">${esc(msg)}</textarea>
+      <div class="actions">
+        <button class="btn" data-copyimg="${c.id}">Скопировать картинку</button>
+        <button class="btn gray" data-copy="${c.id}">Скопировать текст</button>
+        <span style="flex:1"></span>
+        <span style="font-size:13px;color:var(--soft)">Статус</span>
+        <select data-st="${c.id}">${STATUSES.map(s => `<option ${s === c.st ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>`;
+  }).join('') || '<p style="color:var(--soft)">Под фильтр ничего не попало.</p>';
 }
 
-function openDetail(id) {
-  CUR = COMPANIES.find(c => c.id === id);
-  if (!CUR) return;
-  document.getElementById('dTitle').textContent = CUR.title;
-  document.getElementById('dAddr').textContent = CUR.fullAddress || '';
-  document.getElementById('dText').value = tpl(CUR);
-  document.getElementById('dShot').src = mockSrc();
-  document.getElementById('bakeBox').innerHTML = '';
-  document.getElementById('viewList').style.display = 'none';
-  document.getElementById('viewDetail').style.display = '';
-  window.scrollTo(0, 0);
+/* ---------- Пульт ---------- */
+function renderPult() {
+  const cs = DATA.companies;
+  const bySt = {};
+  STATUSES.forEach(s => bySt[s] = cs.filter(c => c.st === s).length);
+  const total = cs.length || 1;
+  document.getElementById('pBar').innerHTML =
+    STATUSES.map(s => `<div style="width:${(bySt[s] / total * 100).toFixed(1)}%;background:${ST_COLORS[s]}"></div>`).join('');
+  document.getElementById('pLegend').innerHTML =
+    STATUSES.map(s => `<span><i style="background:${ST_COLORS[s]}"></i>${s}: <b>${bySt[s]}</b></span>`).join('');
+  const rows = cs
+    .filter(c => c.st !== 'Новый')
+    .sort((a, b) => (a.st < b.st ? -1 : 1))
+    .slice(0, 30);
+  document.getElementById('pRows').innerHTML = rows.length
+    ? rows.map(c => `<div class="strow">
+        <span class="nm">${esc(c.title)} <span class="sub">· ${esc(c.street)}</span></span>
+        <span class="sub">${esc(c.st)}</span>
+        <select data-pst="${c.id}">${STATUSES.map(s => `<option ${s === c.st ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      </div>`).join('')
+    : '<div class="note" style="padding:6px 0">Пока все карточки в статусе «Новый».</div>';
 }
 
-document.getElementById('q').addEventListener('input', render);
-document.getElementById('list').addEventListener('click', e => {
-  const item = e.target.closest('.item');
-  if (item) openDetail(item.dataset.id);
-});
-document.getElementById('back').addEventListener('click', () => {
-  document.getElementById('viewDetail').style.display = 'none';
-  document.getElementById('viewList').style.display = '';
-  window.scrollTo(0, 0);
-});
+/* ---------- события ---------- */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  document.getElementById('view-hunt').style.display = t.dataset.tab === 'hunt' ? '' : 'none';
+  document.getElementById('view-pult').style.display = t.dataset.tab === 'pult' ? '' : 'none';
+}));
 
-document.getElementById('selBtn').addEventListener('click', async () => {
-  const ta = document.getElementById('dText');
-  const b = document.getElementById('selBtn');
-  ta.focus();
-  let ok = false;
-  try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) {}
-  if (!ok) {
-    ta.select();
-    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
-  }
-  b.textContent = ok ? 'Скопировано ✓' : 'Выделено — зажми и «Копировать»';
-  if (!ok) ta.select();
-  setTimeout(() => { b.textContent = 'Скопировать текст'; }, 2500);
-});
+document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  ch.classList.add('on');
+  filter = ch.dataset.f;
+  render();
+}));
+document.getElementById('fStatus').addEventListener('change', e => { fStatus = e.target.value; render(); });
+document.getElementById('fSort').addEventListener('change', e => { fSort = e.target.value; render(); });
 
-function wrapLines(ctx, text, maxW) {
-  const out = [];
-  for (const para of String(text).split('\n')) {
-    if (!para.trim()) { out.push(''); continue; }
-    let line = '';
-    for (const w of para.split(/\s+/)) {
-      const probe = line ? line + ' ' + w : w;
-      if (ctx.measureText(probe).width > maxW && line) { out.push(line); line = w; }
-      else line = probe;
+document.getElementById('list').addEventListener('click', async e => {
+  const imgId = e.target.dataset.copyimg;
+  const txtId = e.target.dataset.copy;
+  const btn = e.target;
+  const setBtn = (label, back) => {
+    btn.textContent = label;
+    setTimeout(() => { btn.textContent = back; }, 3000);
+  };
+  if (imgId) {
+    // мокап в буфер: перекодируем в честный PNG (мокап может быть и jpg)
+    try {
+      const imgRes = await fetch(mockSrc());
+      if (!imgRes.ok) throw new Error('no shot');
+      const bmp = await createImageBitmap(await imgRes.blob());
+      const cnv = document.createElement('canvas');
+      cnv.width = bmp.width; cnv.height = bmp.height;
+      cnv.getContext('2d').drawImage(bmp, 0, 0);
+      const png = await new Promise(r => cnv.toBlob(r, 'image/png'));
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': png })]);
+      setBtn('Картинка в буфере ✓', 'Скопировать картинку');
+    } catch (err) {
+      setBtn('Мокап не загрузился — обнови страницу', 'Скопировать картинку');
     }
-    if (line) out.push(line);
-  }
-  return out;
-}
-
-document.getElementById('bakeBtn').addEventListener('click', async () => {
-  const b = document.getElementById('bakeBtn');
-  b.disabled = true; b.textContent = 'Собираю…';
-  try {
-    const img = await new Promise((res, rej) => {
-      const i = new Image();
-      i.onload = () => res(i); i.onerror = () => rej(new Error('мокап не загрузился'));
-      i.src = mockSrc();
-    });
-    const text = document.getElementById('dText').value;
-    const W = img.width, pad = 44, fs = 30, lh = 46, gap = 26;
-    const cnv = document.createElement('canvas');
-    const probe = cnv.getContext('2d');
-    probe.font = fs + 'px "Segoe UI",system-ui,sans-serif';
-    const lines = wrapLines(probe, text, W - pad * 2);
-    cnv.width = W;
-    cnv.height = img.height + gap + pad + lines.length * lh + pad;
-    const ctx = cnv.getContext('2d');
-    ctx.fillStyle = '#f0ebe1';
-    ctx.fillRect(0, 0, cnv.width, cnv.height);
-    ctx.drawImage(img, 0, 0);
-    const cardY = img.height + gap, cardH = pad + lines.length * lh + pad;
-    const cardX = 28, cardW = W - cardX * 2, r = 20;
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.moveTo(cardX + r, cardY);
-    ctx.arcTo(cardX + cardW, cardY, cardX + cardW, cardY + cardH, r);
-    ctx.arcTo(cardX + cardW, cardY + cardH, cardX, cardY + cardH, r);
-    ctx.arcTo(cardX, cardY + cardH, cardX, cardY, r);
-    ctx.arcTo(cardX, cardY, cardX + cardW, cardY, r);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = '#1f2328';
-    ctx.font = fs + 'px "Segoe UI",system-ui,sans-serif';
-    let y = cardY + pad + fs;
-    for (const line of lines) { ctx.fillText(line, cardX + pad, y); y += lh; }
-    const blob = await new Promise(res => cnv.toBlob(res, 'image/png'));
-    const url = URL.createObjectURL(blob);
-    document.getElementById('bakeBox').innerHTML =
-      '<img class="shot" src="' + url + '">' +
-      '<div class="note">Зажми картинку → «Сохранить» → отправь в чат как фото.</div>' +
-      '<button class="btn gray" id="copyBake">Скопировать картинку</button>';
-    document.getElementById('copyBake').addEventListener('click', async () => {
-      const cb = document.getElementById('copyBake');
-      try {
-        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        cb.textContent = 'Скопировано ✓ — вставь в чат Ctrl+V / «Вставить»';
-      } catch (e) {
-        cb.textContent = 'Не вышло — зажми картинку и сохрани';
-      }
-      setTimeout(() => { cb.textContent = 'Скопировать картинку'; }, 3000);
-    });
-  } catch (err) {
-    document.getElementById('bakeBox').innerHTML = '<div class="note">Не вышло: ' + esc(String(err.message || err)) + '</div>';
-  } finally {
-    b.disabled = false; b.textContent = 'Сделать картинку с текстом';
+  } else if (txtId) {
+    const ta = document.querySelector(`textarea[data-ta="${txtId}"]`);
+    try {
+      await navigator.clipboard.writeText(ta.value);
+      setBtn('Текст в буфере ✓', 'Скопировать текст');
+    } catch (err) {
+      ta.select();
+      setBtn('Выделено — Ctrl+C', 'Скопировать текст');
+    }
   }
 });
+
+async function changeStatus(id, status) {
+  const local = loadLocalStatuses();
+  local[id] = { status, updated: new Date().toISOString() };
+  saveLocalStatuses(local);
+  DATA.statuses[id] = local[id];
+  const c = DATA.companies.find(x => x.id === id);
+  c.st = status;
+  renderCounters();
+  renderPult();
+}
+document.getElementById('list').addEventListener('change', e => {
+  const id = e.target.dataset.st;
+  if (id) {
+    changeStatus(id, e.target.value);
+    const card = e.target.closest('.card');
+    card.classList.remove('sent', 'work');
+    if (statusClass(e.target.value)) card.classList.add(statusClass(e.target.value));
+  }
+});
+document.getElementById('pRows').addEventListener('change', e => {
+  const id = e.target.dataset.pst;
+  if (id) changeStatus(id, e.target.value);
+});
+
+/* экспорт: собираем xlsx прямо в браузере */
+document.getElementById('xlsxGo').addEventListener('click', () => {
+  const rows = DATA.companies.map((c, i) => {
+    const site = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
+    const soc = type => (c.socialLinks || []).filter(Boolean).find(l => l.type === type);
+    const st = DATA.statuses[c.id] || {};
+    return {
+      '№': i + 1,
+      'Название': c.title,
+      'Адрес': c.fullAddress,
+      'Телефон': (c.phones || []).join(', '),
+      'WhatsApp': (soc('whatsapp') || {}).readable || ((soc('whatsapp') || {}).href || ''),
+      'Telegram': (soc('telegram') || {}).readable || ((soc('telegram') || {}).href || ''),
+      'ВКонтакте': (soc('vkontakte') || {}).readable || ((soc('vkontakte') || {}).href || ''),
+      'Сайт': site ? site.url : 'сайта нет',
+      'Рейтинг': c.rating,
+      'Отзывов': c.reviews,
+      'Цены': (c.prices || []).map(p => p.name + ': ' + p.value).join('; '),
+      'Часы': c.hours || '',
+      'Статус': st.status || 'Новый',
+      'Статус обновлён': st.updated || ''
+    };
+  });
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{ wch: 5 }, { wch: 28 }, { wch: 45 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 22 }, { wch: 24 }, { wch: 8 }, { wch: 8 }, { wch: 40 }, { wch: 24 }, { wch: 12 }, { wch: 20 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Охота');
+  XLSX.writeFile(wb, 'ohotnik-export.xlsx');
+});
+
+function shortUrl(u) { return u.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
 load();
 </script>
