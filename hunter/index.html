@@ -180,7 +180,7 @@ function channelsOf(c) {
   const social = (c.socialLinks || []).filter(Boolean);
   const phones = (c.phones || []).filter(Boolean);
   const wa = social.find(l => l.type === 'whatsapp');
-  if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href });
+  if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href.split('?')[0] }); // без текста из Яндекса
   else if (phones.length) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + phones[0].replace(/\D/g, '') });
   const tg = social.find(l => l.type === 'telegram');
   if (tg && tg.href) out.push({ name: 'Telegram', href: tg.href });
@@ -567,7 +567,7 @@ document.getElementById('xlsxGo').addEventListener('click', () => {
       'Название': c.title,
       'Адрес': c.fullAddress,
       'Телефон': (c.phones || []).join(', '),
-      'WhatsApp': (soc('whatsapp') || {}).readable || ((soc('whatsapp') || {}).href || ''),
+      'WhatsApp': (soc('whatsapp') || {}).readable || (((soc('whatsapp') || {}).href || '').split('?')[0]),
       'Telegram': (soc('telegram') || {}).readable || ((soc('telegram') || {}).href || ''),
       'ВКонтакте': (soc('vkontakte') || {}).readable || ((soc('vkontakte') || {}).href || ''),
       'Сайт': site ? site.url : 'сайта нет',
