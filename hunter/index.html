@@ -91,8 +91,8 @@
       <span style="flex:1"></span>
       <label style="font-size:13px;color:var(--soft)">Статус
         <select id="fStatus">
-          <option>Новый</option>
-          <option value="" selected>любой</option>
+          <option selected>Новый</option>
+          <option value="">любой</option>
           <option>В работе</option><option>Отправлено</option>
           <option>В разговоре</option><option>Отказ</option>
         </select>
@@ -151,7 +151,7 @@
 const STATUSES = ['Новый', 'В работе', 'Отправлено', 'В разговоре', 'Отказ'];
 const ST_COLORS = { 'Новый': '#c9d3da', 'В работе': '#e8a13d', 'Отправлено': '#2f9e44', 'В разговоре': '#4dabf7', 'Отказ': '#adb5bd' };
 let DATA = null, ACC = 'парикмахерскую';
-let filter = 'all', fStatus = '', fSort = 'idx';
+let filter = 'all', fStatus = 'Новый', fSort = 'idx';
 
 const tpl = (c, street) => {
   const first = c.hasSite
