@@ -39,6 +39,7 @@
   .row-label { font-size: 11px; letter-spacing: .06em; color: var(--soft); text-transform: uppercase; margin: 10px 0 4px; }
   .pill { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 12px; margin-right: 6px; }
   .no-site { background: #fdecea; color: #b3261e; }
+  .site-dead { background: #fff1e6; color: #b35900; }
   .has-site { background: #e6f4ea; color: var(--ok); }
   .booking { background: #e8f0fe; color: #1a56b8; }
   .msg-btn { display: inline-block; border: 1px solid var(--line); background: #fafafa; border-radius: 8px; padding: 5px 12px; font-size: 13px; text-decoration: none; color: var(--ink); margin: 0 6px 6px 0; }
@@ -396,7 +397,7 @@ function statusClass(st) {
 
 function renderCounters() {
   const cs = DATA.companies;
-  const noSite = cs.filter(c => !c.hasSite).length;
+  const noSite = cs.filter(c => !c.hasSite || c.siteDead).length;
   const write = cs.filter(c => c.channels.length).length;
   const sent = cs.filter(c => c.st === 'Отправлено').length;
   document.getElementById('counters').innerHTML =
@@ -407,7 +408,7 @@ const cnt = (n, label) => `<div class="counter"><b>${n}</b><span>${label}</span>
 
 function visible() {
   let cs = DATA.companies;
-  if (filter === 'nosite') cs = cs.filter(c => !c.hasSite);
+  if (filter === 'nosite') cs = cs.filter(c => !c.hasSite || c.siteDead);
   if (filter === 'writeto') cs = cs.filter(c => c.channels.length);
   if (filter === 'notsent') cs = cs.filter(c => c.st !== 'Отправлено');
   if (fStatus) cs = cs.filter(c => c.st === fStatus);
@@ -431,7 +432,9 @@ function render() {
       <div class="addr">${esc(c.fullAddress || '')}</div>
       <div>
         ${c.hasSite
-          ? `<span class="pill has-site">сайт есть</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`
+          ? (c.siteDead
+            ? `<span class="pill site-dead">сайт не работает</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`
+            : `<span class="pill has-site">сайт есть</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`)
           : '<span class="pill no-site">сайта нет</span>'}
         ${hasBooking(c) ? '<span class="pill booking">онлайн-запись в Яндексе</span>' : ''}
       </div>
