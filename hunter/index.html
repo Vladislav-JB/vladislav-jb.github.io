@@ -497,8 +497,8 @@ document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', ()
   document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
   ch.classList.add('on');
   filter = ch.dataset.f;
-  // по умолчанию вместе с кнопкой идёт статус «Новый»; для «Ещё не отправлено» — «любой»
-  fStatus = filter === 'notsent' ? '' : 'Новый';
+  // «Все»/«Без сайта» → «Новый»; «Ещё не отправлено» → «Ещё не отправлено» (очередь, которую ты сам наполняешь)
+  fStatus = filter === 'notsent' ? 'Ещё не отправлено' : 'Новый';
   document.getElementById('fStatus').value = fStatus;
   render();
 }));
