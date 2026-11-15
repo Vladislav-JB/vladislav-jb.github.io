@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Охотник</title>
+<title>Hunter Works</title>
 <script src="xlsx.full.min.js"></script>
 <style>
   :root {
     --bg: #f6f5f2; --card: #ffffff; --ink: #1f2328; --soft: #6a7077;
-    --line: #e6e3dd; --accent: #2f6fed; --ok: #1a7f37; --warn: #b35900; --dark: #14212b;
+    --line: #e6e3dd; --accent: #2f6fed; --ok: #1a7f37; --warn: #b35900; --dark: #0b2a22;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
-  .top { background: var(--dark); color: #fff; padding: 16px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-  .top h1 { margin: 0; font-size: 21px; font-weight: 700; }
-  .top .meta { color: #9db4c0; font-size: 13px; flex: 1; min-width: 200px; }
-  .tabs { display: flex; gap: 6px; }
-  .tab { border: 1px solid #3a4c5a; background: transparent; color: #cfdbe2; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
-  .tab.on { background: #fff; color: var(--dark); border-color: #fff; font-weight: 600; }
+  .top { background: #12332a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%230c2a21' opacity='.55'%3E%3Cpath d='M60 12c-8 12-8 26 0 36 8-10 8-24 0-36z'/%3E%3Cpath d='M38 28c-8 4-12 13-10 21 2 6 10 8 16 4-4-8-5-17-6-25z'/%3E%3Cpath d='M82 28c8 4 12 13 10 21-2 6-10 8-16 4 4-8 5-17 6-25z'/%3E%3Crect x='46' y='52' width='28' height='6' rx='3'/%3E%3Cpath d='M56 60c-2 12-4 18-10 24 8-2 12-6 14-12 2 6 6 10 14 12-6-6-8-12-10-24z'/%3E%3C/g%3E%3C/svg%3E"); color: #f3ead0; padding: 16px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .top h1 { margin: 0; font-size: 21px; font-weight: 700; font-style: italic; letter-spacing: .01em; }
+  .top .meta { color: #a9bcb0; font-size: 13px; flex: 1; min-width: 200px; }
+  .tabs { display: flex; gap: 6px; margin-left: auto; }
+  .tab { border: 1px solid #2e5648; background: transparent; color: #cfe0d6; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
+  .tab.on { background: #f3ead0; color: var(--dark); border-color: #f3ead0; font-weight: 600; }
   .counters { display: flex; gap: 12px; padding: 14px 24px 0; flex-wrap: wrap; }
   .counter { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; min-width: 120px; }
   .counter b { display: block; font-size: 24px; }
@@ -42,8 +42,13 @@
   .site-dead { background: #fff1e6; color: #b35900; }
   .has-site { background: #e6f4ea; color: var(--ok); }
   .booking { background: #e8f0fe; color: #1a56b8; }
-  .msg-btn { display: inline-block; border: 1px solid var(--line); background: #fafafa; border-radius: 8px; padding: 5px 12px; font-size: 13px; text-decoration: none; color: var(--ink); margin: 0 6px 6px 0; }
-  .msg-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .msg-btn { display: inline-block; border-radius: 8px; padding: 6px 16px; font-size: 13px; text-decoration: none; color: #fff; font-weight: 600; margin: 0 6px 6px 0; }
+  .msg-btn.wa { background: #25d366; }
+  .msg-btn.wa:hover { background: #1fb857; }
+  .msg-btn.tg { background: #2aabee; }
+  .msg-btn.tg:hover { background: #1c96d4; }
+  .msg-btn.vk { background: #0077ff; }
+  .msg-btn.vk:hover { background: #0064d6; }
   textarea { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 13px/1.5 "Segoe UI", system-ui; resize: vertical; background: #fcfcfb; }
   .actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
   .btn { border: 0; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; background: var(--accent); color: #fff; text-decoration: none; display: inline-block; }
@@ -73,8 +78,7 @@
 </head>
 <body>
   <div class="top">
-    <h1 id="title">Охотник</h1>
-    <div class="meta" id="meta"></div>
+    <h1 id="title">Hunter Works</h1>
     <div class="tabs">
       <button class="tab on" data-tab="hunt">Охотник</button>
       <button class="tab" data-tab="pult">Пульт</button>
@@ -87,22 +91,20 @@
     <div class="filters">
       <button class="chip on" data-f="all">Все</button>
       <button class="chip" data-f="nosite">Без сайта</button>
-      <button class="chip" data-f="writeto">Есть куда написать</button>
       <button class="chip" data-f="notsent">Ещё не отправлено</button>
       <span style="flex:1"></span>
       <label style="font-size:13px;color:var(--soft)">Статус
         <select id="fStatus">
           <option selected>Новый</option>
+          <option>Отправлено</option>
+          <option>Ещё не отправлено</option>
           <option value="">любой</option>
-          <option>В работе</option><option>Отправлено</option>
-          <option>В разговоре</option><option>Отказ</option>
         </select>
       </label>
       <label style="font-size:13px;color:var(--soft)">Сортировка
         <select id="fSort">
           <option value="idx">по порядку</option>
-          <option value="rating">по рейтингу</option>
-          <option value="reviews">по отзывам</option>
+          <option value="vk">по ВКонтакте</option>
         </select>
       </label>
     </div>
@@ -149,8 +151,8 @@
   </div>
 
 <script>
-const STATUSES = ['Новый', 'В работе', 'Отправлено', 'В разговоре', 'Отказ'];
-const ST_COLORS = { 'Новый': '#c9d3da', 'В работе': '#e8a13d', 'Отправлено': '#2f9e44', 'В разговоре': '#4dabf7', 'Отказ': '#adb5bd' };
+const STATUSES = ['Новый', 'Отправлено', 'Ещё не отправлено'];
+const ST_COLORS = { 'Новый': '#c9d3da', 'Отправлено': '#2f9e44', 'Ещё не отправлено': '#4dabf7' };
 let DATA = null, ACC = 'парикмахерскую';
 let filter = 'all', fStatus = 'Новый', fSort = 'idx';
 
@@ -191,6 +193,8 @@ function channelsOf(c) {
   if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
   return out;
 }
+
+const CH_CLS = { 'WhatsApp': 'wa', 'Telegram': 'tg', 'ВКонтакте': 'vk' };
 
 function siteOf(c) {
   const b = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
@@ -355,11 +359,12 @@ async function load() {
   DATA = await r.json();
   const m = DATA.meta || {};
   ACC = acc((m.query || '').trim().split(/\s+/)[0]) || ACC;
-  document.getElementById('title').textContent =
-    'Охотник · ' + (m.geo ? m.geo.split('/')[1] : '') + ' · ' + (m.query || '');
-  document.getElementById('meta').textContent =
-    'собрано ' + (m.collected ? new Date(m.collected).toLocaleString('ru-RU') : '') +
-    ' · снимок для web-atelie.ru/hunter · открытые данные Яндекс.Карт';
+  document.getElementById('title').textContent = 'Hunter Works';
+  // вид по умолчанию при каждой загрузке: «Все» + статус «Новый» + «по порядку»
+  filter = 'all'; fStatus = 'Новый'; fSort = 'idx';
+  document.getElementById('fStatus').value = fStatus;
+  document.getElementById('fSort').value = fSort;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.f === 'all'));
   const st = Object.assign({}, DATA.statuses || {}, loadLocalStatuses());
   DATA.statuses = st;
   DATA.companies.forEach(c => {
@@ -391,29 +396,27 @@ async function load() {
 
 function statusClass(st) {
   if (st === 'Отправлено') return 'sent';
-  if (st === 'В работе' || st === 'В разговоре') return 'work';
+  if (st === 'Ещё не отправлено') return 'work';
   return '';
 }
 
 function renderCounters() {
   const cs = DATA.companies;
   const noSite = cs.filter(c => !c.hasSite || c.siteDead).length;
-  const write = cs.filter(c => c.channels.length).length;
   const sent = cs.filter(c => c.st === 'Отправлено').length;
   document.getElementById('counters').innerHTML =
     cnt(cs.length, 'всего в базе') + cnt(noSite, 'без сайта') +
-    cnt(write, 'есть куда написать') + cnt(sent, 'отправлено');
+    cnt(sent, 'отправлено');
 }
 const cnt = (n, label) => `<div class="counter"><b>${n}</b><span>${label}</span></div>`;
 
 function visible() {
   let cs = DATA.companies;
   if (filter === 'nosite') cs = cs.filter(c => !c.hasSite || c.siteDead);
-  if (filter === 'writeto') cs = cs.filter(c => c.channels.length);
-  if (filter === 'notsent') cs = cs.filter(c => c.st !== 'Отправлено');
+  if (filter === 'notsent') cs = cs.filter(c => c.st === 'Ещё не отправлено');
   if (fStatus) cs = cs.filter(c => c.st === fStatus);
-  if (fSort === 'rating') cs = [...cs].sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  if (fSort === 'reviews') cs = [...cs].sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+  if (fSort === 'vk') cs = [...cs].sort((a, b) =>
+    (b.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0) - (a.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0));
   return cs;
 }
 
@@ -441,7 +444,7 @@ function render() {
       <div class="row-label">Куда написать</div>
       <div>
         ${c.channels.length
-          ? c.channels.map(ch => `<a class="msg-btn" target="_blank" rel="noopener" href="${esc(ch.href)}">${ch.name}</a>`).join('')
+          ? c.channels.map(ch => `<a class="msg-btn ${CH_CLS[ch.name] || ''}" target="_blank" rel="noopener" href="${esc(ch.href)}">${ch.name}</a>`).join('')
           : (c.phones && c.phones.length ? '<span style="font-size:13px;color:var(--soft)">только телефон: ' + esc(c.phones.join(', ')) + '</span>' : '<span style="font-size:13px;color:var(--soft)">контакт для сообщений не найден</span>')}
       </div>
       ${prices ? `<div class="row-label">Цены</div><div style="font-size:13px">${esc(prices)}</div>` : ''}
@@ -494,6 +497,9 @@ document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', ()
   document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
   ch.classList.add('on');
   filter = ch.dataset.f;
+  // по умолчанию вместе с кнопкой идёт статус «Новый»; для «Ещё не отправлено» — «любой»
+  fStatus = filter === 'notsent' ? '' : 'Новый';
+  document.getElementById('fStatus').value = fStatus;
   render();
 }));
 document.getElementById('fStatus').addEventListener('change', e => { fStatus = e.target.value; render(); });
