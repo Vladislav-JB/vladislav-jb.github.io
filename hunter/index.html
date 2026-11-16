@@ -372,11 +372,15 @@ async function load() {
   const m = DATA.meta || {};
   ACC = acc((m.query || '').trim().split(/\s+/)[0]) || ACC;
   document.getElementById('title').textContent = 'Hunter Works';
-  // вид по умолчанию при каждой загрузке: «Все» + статус «Новый» + «по порядку»
-  filter = 'all'; fStatus = 'Новый'; fSort = 'idx';
+  // вид восстанавливается после обновления страницы (правило 16.11.2026: сброса больше нет)
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('hw_view') || '{}'); } catch (e) { saved = {}; }
+  filter = saved.filter || 'all';
+  fStatus = saved.fStatus !== undefined && saved.fStatus !== null ? saved.fStatus : 'Новый';
+  fSort = saved.fSort || 'idx';
   document.getElementById('fStatus').value = fStatus;
   document.getElementById('fSort').value = fSort;
-  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.f === 'all'));
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.f === filter));
   const st = Object.assign({}, DATA.statuses || {}, loadLocalStatuses());
   DATA.statuses = st;
   DATA.companies.forEach(c => {
@@ -507,6 +511,8 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
   document.getElementById('view-pult').style.display = t.dataset.tab === 'pult' ? '' : 'none';
 }));
 
+const saveView = () => { try { localStorage.setItem('hw_view', JSON.stringify({ filter, fStatus, fSort })); } catch (e) {} };
+
 document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
   document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
   ch.classList.add('on');
@@ -514,10 +520,11 @@ document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', ()
   // «Все»/«Без сайта» → «Новый»; «Ещё не отправлено» → «Ещё не отправлено» (очередь, которую ты сам наполняешь)
   fStatus = filter === 'notsent' ? 'Ещё не отправлено' : 'Новый';
   document.getElementById('fStatus').value = fStatus;
+  saveView();
   render();
 }));
-document.getElementById('fStatus').addEventListener('change', e => { fStatus = e.target.value; render(); });
-document.getElementById('fSort').addEventListener('change', e => { fSort = e.target.value; render(); });
+document.getElementById('fStatus').addEventListener('change', e => { fStatus = e.target.value; saveView(); render(); });
+document.getElementById('fSort').addEventListener('change', e => { fSort = e.target.value; saveView(); render(); });
 
 document.getElementById('list').addEventListener('click', async e => {
   const imgId = e.target.dataset.copyimg;
