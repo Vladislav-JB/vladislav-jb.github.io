@@ -186,9 +186,13 @@ function channelsOf(c) {
   const out = [];
   const social = (c.socialLinks || []).filter(Boolean);
   const phones = (c.phones || []).filter(Boolean);
+  // правило 16.11.2026: городские номера (+7 3/4/8…) в мессенджерах не зарегистрированы —
+  // fallback по телефону строим только с МОБИЛЬНОГО (+7 9…)
+  const isMobile = p => { const d = String(p).replace(/\D/g, ''); return d.length >= 11 && d[0] === '7' && d[1] === '9'; };
+  const mobile = phones.find(isMobile);
   const wa = social.find(l => l.type === 'whatsapp');
   if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href.split('?')[0] }); // без текста из Яндекса
-  else if (phones.length) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + phones[0].replace(/\D/g, '') });
+  else if (mobile) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + mobile.replace(/\D/g, '') });
   const tg = social.find(l => l.type === 'telegram');
   let tgHref = tg && tg.href;
   // страховка: служебная telegram.org → настоящий юзернейм из readable (@Stilmebel999 → https://t.me/Stilmebel999)
@@ -197,7 +201,7 @@ function channelsOf(c) {
     tgHref = un ? 'https://t.me/' + un : null;
   }
   if (tgHref) out.push({ name: 'Telegram', href: tgHref });
-  else if (phones.length) out.push({ name: 'Telegram', href: 'https://t.me/+' + phones[0].replace(/\D/g, '') }); // + обязателен: t.me/7… без плюса ведёт на telegram.org
+  else if (mobile) out.push({ name: 'Telegram', href: 'https://t.me/+' + mobile.replace(/\D/g, '') }); // + обязателен: t.me/7… без плюса ведёт на telegram.org
   const vk = social.find(l => l.type === 'vkontakte');
   if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
   // MAX — мессенджер (max.ru), правило 16.11.2026: тоже контакт, добавляем всегда
