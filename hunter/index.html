@@ -431,10 +431,12 @@ function visible() {
   if (filter === 'nosite') cs = cs.filter(c => !c.hasSite || c.siteDead);
   if (filter === 'notsent') cs = cs.filter(c => c.st === 'Ещё не отправлено');
   if (fStatus) cs = cs.filter(c => c.st === fStatus);
-  if (fSort === 'vk') cs = [...cs].sort((a, b) =>
-    (b.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0) - (a.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0));
-  if (fSort === 'max') cs = [...cs].sort((a, b) =>
-    (b.channels.some(ch => ch.name === 'MAX') ? 1 : 0) - (a.channels.some(ch => ch.name === 'MAX') ? 1 : 0));
+  if (fSort === 'vk' || fSort === 'max') {
+    // канал первым — но только среди неотправленных; «Отправлено» всегда в конце
+    const chName = fSort === 'vk' ? 'ВКонтакте' : 'MAX';
+    const rank = c => ((c.st === 'Отправлено') ? 10 : 0) + ((c.channels || []).some(ch => ch.name === chName) ? 0 : 1);
+    cs = [...cs].sort((a, b) => rank(a) - rank(b));
+  }
   return cs;
 }
 
