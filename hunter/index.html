@@ -49,6 +49,8 @@
   .msg-btn.tg:hover { background: #1c96d4; }
   .msg-btn.vk { background: #0077ff; }
   .msg-btn.vk:hover { background: #0064d6; }
+  .msg-btn.mx { background: #7b2ff2; }
+  .msg-btn.mx:hover { background: #6a25d9; }
   textarea { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 13px/1.5 "Segoe UI", system-ui; resize: vertical; background: #fcfcfb; }
   .actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
   .btn { border: 0; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; background: var(--accent); color: #fff; text-decoration: none; display: inline-block; }
@@ -197,10 +199,13 @@ function channelsOf(c) {
   else if (phones.length) out.push({ name: 'Telegram', href: 'https://t.me/+' + phones[0].replace(/\D/g, '') }); // + обязателен: t.me/7… без плюса ведёт на telegram.org
   const vk = social.find(l => l.type === 'vkontakte');
   if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
+  // MAX — мессенджер (max.ru), правило 16.11.2026: тоже контакт, добавляем всегда
+  const mx = social.find(l => l.type === 'max' || /max\.ru/.test(l.href || ''));
+  if (mx && mx.href) out.push({ name: 'MAX', href: mx.href });
   return out;
 }
 
-const CH_CLS = { 'WhatsApp': 'wa', 'Telegram': 'tg', 'ВКонтакте': 'vk' };
+const CH_CLS = { 'WhatsApp': 'wa', 'Telegram': 'tg', 'ВКонтакте': 'vk', 'MAX': 'mx' };
 
 function siteOf(c) {
   const b = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
