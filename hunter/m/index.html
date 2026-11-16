@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Охотник · телефон</title>
+<title>Hunter Works · телефон</title>
 <style>
   body { margin:0; background:#f6f5f2; color:#1f2328; font:16px/1.5 "Segoe UI",system-ui,sans-serif; }
-  .top { background:#14212b; color:#fff; padding:14px 16px; font-weight:700; display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-  .top small { display:block; font-weight:400; color:#9db4c0; font-size:12px; margin-top:2px; }
-  .top button { border:1px solid #3a5464; background:#1d3240; color:#cfe0ea; border-radius:8px; padding:8px 12px; font-size:13px; flex:none; }
+  .top { background: #12332a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%230c2a21' opacity='.55'%3E%3Cpath d='M60 12c-8 12-8 26 0 36 8-10 8-24 0-36z'/%3E%3Cpath d='M38 28c-8 4-12 13-10 21 2 6 10 8 16 4-4-8-5-17-6-25z'/%3E%3Cpath d='M82 28c8 4 12 13 10 21-2 6-10 8-16 4 4-8 5-17 6-25z'/%3E%3Crect x='46' y='52' width='28' height='6' rx='3'/%3E%3Cpath d='M56 60c-2 12-4 18-10 24 8-2 12-6 14-12 2 6 6 10 14 12-6-6-8-12-10-24z'/%3E%3C/g%3E%3C/svg%3E"); color: #f3ead0; padding: 14px 16px; font-weight: 700; font-style: italic; letter-spacing: .01em; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .top small { display: block; font-weight: 400; font-style: normal; color: #a9bcb0; font-size: 12px; margin-top: 2px; }
+  .top button { border: 1px solid #2e5648; background: transparent; color: #cfe0d6; border-radius: 8px; padding: 8px 12px; font-size: 13px; flex: none; }
   .search { padding:10px 12px; background:#fff; border-bottom:1px solid #e6e3dd; position:sticky; top:0; z-index:2; }
   .search input { width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #e6e3dd; border-radius:10px; font-size:16px; }
   .list { padding:8px 12px 50px; }
@@ -34,7 +34,7 @@
 </head>
 <body>
 <div class="top">
-  <div>Охотник <small id="meta">загружаю…</small></div>
+  <div>Hunter Works <small id="meta">загружаю…</small></div>
   <button id="refresh">Обновить</button>
 </div>
 
@@ -60,7 +60,7 @@
 
     <div class="steps"><b>Шаг 3 · Отправь в мессенджере</b>Telegram / WhatsApp: скрепка → «Галерея» → выбери мокап → в поле подписи зажми → «Вставить» текст → «Отправить» один раз.</div>
 
-    <div class="steps" style="margin-top:24px"><b>Или одной картинкой</b>Текст запекается внутрь: сохрани и отправь как фото, без подписи.</div>
+    <div class="steps" style="margin-top:24px"><b>Или одной картинкой</b>Текст запекается внутрь: кнопка собирает картинку и копирует её в буфер — вставь в чат как фото.</div>
     <button class="btn" id="bakeBtn">Сделать картинку с текстом</button>
     <div id="bakeBox"></div>
   </div>
@@ -248,14 +248,43 @@ document.getElementById('bakeBtn').addEventListener('click', async () => {
     ctx.font = TXT + 'px "Segoe UI", system-ui, sans-serif';
     ctx.textBaseline = 'top';
     lines.forEach((l, i) => ctx.fillText(l, PAD + MSGPAD, PAD + mockH + GAP + MSGPAD + i * LH));
+    BAKE = cnv;
+    const url = cnv.toDataURL('image/png');
     document.getElementById('bakeBox').innerHTML =
-      '<img class="shot" src="' + cnv.toDataURL('image/png') + '">' +
-      '<div class="note">Зажми картинку → «Сохранить» → отправь в чат как фото.</div>';
+      '<img class="shot" src="' + url + '">' +
+      '<button class="btn" id="copyImgBtn" style="margin-top:10px">Скопировать картинку</button>' +
+      '<a class="btn gray" id="dlImgBtn" style="margin-top:8px;text-align:center;text-decoration:none" download="ohotnik.png" href="' + url + '">Скачать картинку</a>' +
+      '<div class="note" id="bakeNote">Копирую в буфер…</div>';
+    // сразу пробуем скопировать в буфер обмена (нужен https/localhost)
+    await copyBake();
   } catch (err) {
     document.getElementById('bakeBox').innerHTML = '<div class="note">Не вышло: ' + esc(String(err.message || err)) + '</div>';
   } finally {
     b.disabled = false; b.textContent = 'Сделать картинку с текстом';
   }
+});
+
+let BAKE = null; // последний собранный canvas
+async function copyBake() {
+  const note = document.getElementById('bakeNote');
+  const btn = document.getElementById('copyImgBtn');
+  try {
+    if (!navigator.clipboard || !window.ClipboardItem || !BAKE) throw new Error('нет');
+    const blob = await new Promise(r => BAKE.toBlob(r, 'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    if (note) note.textContent = 'Скопировано ✓ — в чате зажми поле ввода → «Вставить».';
+    if (btn) btn.textContent = 'Скопировать ещё раз';
+    return true;
+  } catch (e) {
+    if (note) note.textContent = 'Автокопирование не сработало — зажми картинку выше → «Копировать изображение» (или «Сохранить» и отправь как фото).';
+    if (btn) btn.textContent = 'Скопировать картинку';
+    return false;
+  }
+}
+
+// повторное копирование — свежий клик, без ожидания загрузки
+document.addEventListener('click', e => {
+  if (e.target && e.target.id === 'copyImgBtn') copyBake();
 });
 
 load();
