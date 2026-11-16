@@ -107,6 +107,7 @@
         <select id="fSort">
           <option value="idx">по порядку</option>
           <option value="vk">по ВКонтакте</option>
+          <option value="max">по MAX</option>
         </select>
       </label>
     </div>
@@ -428,6 +429,8 @@ function visible() {
   if (fStatus) cs = cs.filter(c => c.st === fStatus);
   if (fSort === 'vk') cs = [...cs].sort((a, b) =>
     (b.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0) - (a.channels.some(ch => ch.name === 'ВКонтакте') ? 1 : 0));
+  if (fSort === 'max') cs = [...cs].sort((a, b) =>
+    (b.channels.some(ch => ch.name === 'MAX') ? 1 : 0) - (a.channels.some(ch => ch.name === 'MAX') ? 1 : 0));
   return cs;
 }
 
