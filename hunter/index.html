@@ -187,8 +187,14 @@ function channelsOf(c) {
   if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href.split('?')[0] }); // без текста из Яндекса
   else if (phones.length) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + phones[0].replace(/\D/g, '') });
   const tg = social.find(l => l.type === 'telegram');
-  if (tg && tg.href) out.push({ name: 'Telegram', href: tg.href });
-  else if (phones.length) out.push({ name: 'Telegram', href: 'https://t.me/' + phones[0].replace(/\D/g, '') });
+  let tgHref = tg && tg.href;
+  // страховка: служебная telegram.org → настоящий юзернейм из readable (@Stilmebel999 → https://t.me/Stilmebel999)
+  if (tgHref && /telegram\.org/.test(tgHref) && !/t\.me/.test(tgHref)) {
+    const un = (tg.readable || '').replace(/^@/, '').trim();
+    tgHref = un ? 'https://t.me/' + un : null;
+  }
+  if (tgHref) out.push({ name: 'Telegram', href: tgHref });
+  else if (phones.length) out.push({ name: 'Telegram', href: 'https://t.me/+' + phones[0].replace(/\D/g, '') }); // + обязателен: t.me/7… без плюса ведёт на telegram.org
   const vk = social.find(l => l.type === 'vkontakte');
   if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
   return out;
