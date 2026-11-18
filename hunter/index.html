@@ -373,7 +373,9 @@ async function pushStatusToServer(id, status) {
   updateSyncNote();
 }
 
-const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent((DATA.meta && DATA.meta.collected) || '1');
+const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent(
+  (DATA.meta && (DATA.meta.mockv || DATA.meta.collected)) || '1'
+);
 
 async function load() {
   // без кэша: иначе после обновления мокапа страница показывает старую картинку
