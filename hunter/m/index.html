@@ -113,7 +113,8 @@ async function load() {
     if (snap && snap.meta && snap.meta.cloud) {
       const cfg = snap.meta.cloud;
       const H = { 'apikey': cfg.key, 'Authorization': 'Bearer ' + cfg.key };
-      const baseRows = await (await fetch(cfg.url + '/rest/v1/base?select=*&id=eq.1', { headers: H })).json();
+      const baseId = cfg.baseId || 1;
+      const baseRows = await (await fetch(cfg.url + '/rest/v1/base?select=*&id=eq.' + baseId, { headers: H })).json();
       if (!baseRows.length) throw new Error('База ещё не выгружалась из Охотника на ПК');
       const b = baseRows[0].data || {};
       const rows = await (await fetch(cfg.url + '/rest/v1/statuses?select=*', { headers: H })).json();

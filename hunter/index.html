@@ -18,6 +18,8 @@
   .tabs { display: flex; gap: 6px; margin-left: auto; }
   .tab { border: 1px solid #2e5648; background: transparent; color: #cfe0d6; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
   .tab.on { background: #f3ead0; color: var(--dark); border-color: #f3ead0; font-weight: 600; }
+  .niche-link { border: 1px solid #2e5648; background: transparent; color: #f3ead0; border-radius: 8px; padding: 6px 14px; font-size: 14px; text-decoration: none; }
+  .niche-link:hover { background: #1c4034; }
   .counters { display: flex; gap: 12px; padding: 14px 24px 0; flex-wrap: wrap; }
   .counter { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; min-width: 120px; }
   .counter b { display: block; font-size: 24px; }
@@ -85,6 +87,7 @@
       <button class="tab on" data-tab="hunt">Охотник</button>
       <button class="tab" data-tab="pult">Пульт</button>
     </div>
+    <a class="niche-link" id="nicheLink" style="display:none" href="#">Маникюр →</a>
   </div>
 
   <!-- ОХОТНИК -->
@@ -375,7 +378,11 @@ async function load() {
   DATA = await r.json();
   const m = DATA.meta || {};
   ACC = acc((m.query || '').trim().split(/\s+/)[0]) || ACC;
-  document.getElementById('title').textContent = 'Hunter Works';
+  const niche = m.niche || '';
+  document.getElementById('title').textContent = niche ? 'Hunter Works — ' + niche : 'Hunter Works';
+  const nl = document.getElementById('nicheLink');
+  if (niche === 'маникюр') { nl.textContent = '← Мебель'; nl.href = '../'; nl.style.display = ''; }
+  else if (niche) { nl.textContent = 'Маникюр →'; nl.href = 'manicure/'; nl.style.display = ''; }
   // вид восстанавливается после обновления страницы (правило 16.11.2026: сброса больше нет)
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem('hw_view') || '{}'); } catch (e) { saved = {}; }
