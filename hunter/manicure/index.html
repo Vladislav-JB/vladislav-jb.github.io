@@ -376,7 +376,8 @@ async function pushStatusToServer(id, status) {
 const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent((DATA.meta && DATA.meta.collected) || '1');
 
 async function load() {
-  const r = await fetch('data.json');
+  // без кэша: иначе после обновления мокапа страница показывает старую картинку
+  const r = await fetch('data.json', { cache: 'no-store' });
   DATA = await r.json();
   const m = DATA.meta || {};
   ACC = acc((m.query || '').trim().split(/\s+/)[0]) || ACC;
