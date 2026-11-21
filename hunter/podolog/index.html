@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hunter Works</title>
+<script src="xlsx.full.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f5f2; --card: #ffffff; --ink: #1f2328; --soft: #6a7077;
+    --line: #e6e3dd; --accent: #2f6fed; --ok: #1a7f37; --warn: #b35900; --dark: #0b2a22;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
+  .top { background: #12332a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%230c2a21' opacity='.55'%3E%3Cpath d='M60 12c-8 12-8 26 0 36 8-10 8-24 0-36z'/%3E%3Cpath d='M38 28c-8 4-12 13-10 21 2 6 10 8 16 4-4-8-5-17-6-25z'/%3E%3Cpath d='M82 28c8 4 12 13 10 21-2 6-10 8-16 4 4-8 5-17 6-25z'/%3E%3Crect x='46' y='52' width='28' height='6' rx='3'/%3E%3Cpath d='M56 60c-2 12-4 18-10 24 8-2 12-6 14-12 2 6 6 10 14 12-6-6-8-12-10-24z'/%3E%3C/g%3E%3C/svg%3E"); color: #f3ead0; padding: 16px 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .top h1 { margin: 0; font-size: 21px; font-weight: 700; font-style: italic; letter-spacing: .01em; }
+  .top .meta { color: #a9bcb0; font-size: 13px; flex: 1; min-width: 200px; }
+  .tabs { display: flex; gap: 6px; margin-left: auto; }
+  .tab { border: 1px solid #2e5648; background: transparent; color: #cfe0d6; border-radius: 8px; padding: 6px 16px; cursor: pointer; font-size: 14px; }
+  .tab.on { background: #f3ead0; color: var(--dark); border-color: #f3ead0; font-weight: 600; }
+  .niche-link { border: 1px solid #2e5648; background: transparent; color: #f3ead0; border-radius: 8px; padding: 6px 14px; font-size: 14px; text-decoration: none; }
+  .niche-link:hover { background: #1c4034; }
+  .counters { display: flex; gap: 12px; padding: 14px 24px 0; flex-wrap: wrap; }
+  .counter { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; min-width: 120px; }
+  .counter b { display: block; font-size: 24px; }
+  .counter span { font-size: 12px; color: var(--soft); }
+  .filters { display: flex; gap: 8px; align-items: center; padding: 14px 24px; flex-wrap: wrap; position: sticky; top: 0; background: var(--bg); z-index: 5; border-bottom: 1px solid var(--line); }
+  .chip { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; }
+  .chip.on { background: var(--dark); color: #fff; border-color: var(--dark); }
+  .filters select { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; background: var(--card); }
+  .list { padding: 8px 24px 60px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 14px 0; }
+  .card.sent { border-left: 4px solid var(--ok); }
+  .card.work { border-left: 4px solid var(--warn); }
+  .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .num { color: var(--soft); font-size: 13px; min-width: 40px; }
+  .head h3 { margin: 0; font-size: 17px; }
+  .rating { color: var(--soft); font-size: 13px; }
+  .rating b { color: var(--ink); }
+  .addr { color: var(--soft); font-size: 13px; margin: 2px 0 8px; }
+  .row-label { font-size: 11px; letter-spacing: .06em; color: var(--soft); text-transform: uppercase; margin: 10px 0 4px; }
+  .pill { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 12px; margin-right: 6px; }
+  .no-site { background: #fdecea; color: #b3261e; }
+  .site-dead { background: #fff1e6; color: #b35900; }
+  .has-site { background: #e6f4ea; color: var(--ok); }
+  .booking { background: #e8f0fe; color: #1a56b8; }
+  .msg-btn { display: inline-block; border-radius: 8px; padding: 6px 16px; font-size: 13px; text-decoration: none; color: #fff; font-weight: 600; margin: 0 6px 6px 0; }
+  .msg-btn.wa { background: #25d366; }
+  .msg-btn.wa:hover { background: #1fb857; }
+  .msg-btn.tg { background: #2aabee; }
+  .msg-btn.tg:hover { background: #1c96d4; }
+  .msg-btn.vk { background: #0077ff; }
+  .msg-btn.vk:hover { background: #0064d6; }
+  .msg-btn.mx { background: #7b2ff2; }
+  .msg-btn.mx:hover { background: #6a25d9; }
+  textarea { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; font: 13px/1.5 "Segoe UI", system-ui; resize: vertical; background: #fcfcfb; }
+  .actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+  .btn { border: 0; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; background: var(--accent); color: #fff; text-decoration: none; display: inline-block; }
+  .btn.gray { background: #eceae6; color: var(--ink); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .card select { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; }
+  .hook { background: #faf8f4; border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #4a4640; margin-top: 8px; }
+  .hook i { color: var(--soft); font-style: normal; font-size: 12px; }
+  .foot { color: var(--soft); font-size: 12px; padding: 10px 24px 30px; }
+  /* пульт */
+  .pult { padding: 8px 24px 60px; max-width: 980px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin: 14px 0; }
+  .panel h2 { margin: 0 0 12px; font-size: 16px; }
+  .bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: #eee; }
+  .bar div { height: 100%; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--soft); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+  .strows { margin-top: 10px; }
+  .strow { display: flex; gap: 10px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 14px; flex-wrap: wrap; }
+  .strow .nm { flex: 1; min-width: 180px; }
+  .strow .sub { color: var(--soft); font-size: 12px; }
+  .strow select { border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: 12px; }
+  .shotimg { border: 1px solid var(--line); border-radius: 8px; margin-top: 10px; max-width: 100%; }
+  .note { font-size: 12px; color: var(--soft); margin-top: 6px; }
+  code { background: #f1efea; border-radius: 4px; padding: 1px 6px; font-size: 12px; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <h1 id="title">Hunter Works</h1>
+    <div class="tabs">
+      <button class="tab on" data-tab="hunt">Охотник</button>
+      <button class="tab" data-tab="pult">Пульт</button>
+    </div>
+    <a class="niche-link" id="nicheLink" style="display:none" href="#">Маникюр →</a>
+  </div>
+
+  <!-- ОХОТНИК -->
+  <div id="view-hunt">
+    <div class="counters" id="counters"></div>
+    <div class="filters">
+      <button class="chip on" data-f="all">Все</button>
+      <button class="chip" data-f="nosite">Без сайта</button>
+      <button class="chip" data-f="notsent">Ещё не отправлено</button>
+      <span style="flex:1"></span>
+      <label style="font-size:13px;color:var(--soft)">Статус
+        <select id="fStatus">
+          <option selected>Новый</option>
+          <option>Отправлено</option>
+          <option>Ещё не отправлено</option>
+          <option value="">любой</option>
+        </select>
+      </label>
+      <label style="font-size:13px;color:var(--soft)">Сортировка
+        <select id="fSort">
+          <option value="idx">по порядку</option>
+          <option value="vk">по ВКонтакте</option>
+          <option value="max">по MAX</option>
+        </select>
+      </label>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="foot">
+      Подготовка сообщений — по утверждённому шаблону (название, улица, ниша; при найденном сайте — согласованная замена «Предлагаю обновить ваш сайт.»).
+      Порядок отправки: «Скопировать картинку» → Ctrl+V в чат → щёлкни поле «Подпись» → «Скопировать текст» → Ctrl+V → «Отправить» один раз.
+      Отправка вручную и по одной; интервалы: ВК ~1/10 мин, WhatsApp ~1/30 мин, Telegram ~1/час. Зелёная строка = уже отправляли, повторно первым сообщением не пишем.
+    </div>
+  </div>
+
+  <!-- ПУЛЬТ -->
+  <div id="view-pult" style="display:none">
+    <div class="pult">
+      <div class="panel">
+        <h2>Итоги охоты</h2>
+        <div class="bar" id="pBar"></div>
+        <div class="legend" id="pLegend"></div>
+        <div class="strows" id="pRows"></div>
+        <div class="note" id="syncNote">Проверяю связь с облаком статусов…</div>
+      </div>
+
+      <div class="panel">
+        <h2>Мокап для сообщений</h2>
+        <div class="inline">
+          <a class="btn gray" href="mockup.jpg" target="_blank" rel="noopener">Открыть / скачать</a>
+          <button class="btn gray" id="mockFolderBtn" type="button">Открыть папку со снимками</button>
+        </div>
+        <div class="note" id="mockFolderNote" style="display:none"></div>
+        <div id="shotBox"></div>
+        <div class="note">Фирменный мокап «Веб-Ателье», который вкладывается в первое сообщение. Обновляется на компьютере (кнопки «Сделать скриншот» / «Взять этот файл») и попадает сюда при обновлении снимка.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Сбор новой базы</h2>
+        <div class="note" style="font-size:13px">Сбор базы идёт на компьютере: там запущен Охотник (<code>node server.js</code> → Пульт → «Собрать» — нужен браузер и Яндекс). После сбора обнови эту страницу:</div>
+        <div class="note" style="font-size:13px;margin-top:10px"><code>node publish.js</code> → <code>git add hunter</code> → <code>git commit -m "Охотник: снимок"</code> → <code>git push</code> — и через минуту данные здесь свежие.</div>
+      </div>
+
+      <div class="panel">
+        <h2>Экспорт</h2>
+        <button class="btn" id="xlsxGo">Скачать Excel (xlsx)</button>
+        <div class="note">Все колонки базы + статусы (включая проставленные в этом браузере). Открывается в Excel/LibreOffice.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const STATUSES = ['Новый', 'Отправлено', 'Ещё не отправлено'];
+const ST_COLORS = { 'Новый': '#c9d3da', 'Отправлено': '#2f9e44', 'Ещё не отправлено': '#4dabf7' };
+let DATA = null, ACC = 'парикмахерскую';
+let filter = 'all', fStatus = 'Новый', fSort = 'idx';
+
+const tpl = (c, street) => {
+  const first = c.hasSite
+    ? 'Предлагаю обновить ваш сайт.'
+    : 'Обратил внимание, что отдельного сайта пока нет.';
+  return `Здравствуйте!
+
+Увидел вашу компанию «${c.title}» (${street}) на Яндекс.Картах.
+
+${first} Часть клиентов, которые ищут ${c.niche || ACC} в интернете, может выбирать тех, у кого сразу видны услуги, цены и возможность записаться.
+
+Я делаю сайты для таких компаний. Есть готовый пример с услугами, ценами и онлайн-записью — могу прислать ссылку, если интересно. За 1–2 дня соберу такой же под вас, сначала покажу бесплатно.
+
+Также можно автоматизировать рутину: запись клиентов, напоминания о визитах и ответы на частые вопросы. Это поможет меньше времени тратить на переписку и звонки, снизить количество пропущенных визитов и уделять больше внимания клиентам.
+
+Вот скриншот примера сайта!`;
+};
+
+function streetOf(c) {
+  const p = (c.fullAddress || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (p.length >= 2) return p[p.length - 2] + ', ' + p[p.length - 1];
+  return c.fullAddress || 'адрес не указан';
+}
+
+function channelsOf(c) {
+  const out = [];
+  const social = (c.socialLinks || []).filter(Boolean);
+  const phones = (c.phones || []).filter(Boolean);
+  // правило 16.11.2026: городские номера (+7 3/4/8…) в мессенджерах не зарегистрированы —
+  // fallback по телефону строим только с МОБИЛЬНОГО (+7 9…)
+  const isMobile = p => { const d = String(p).replace(/\D/g, ''); return d.length >= 11 && d[0] === '7' && d[1] === '9'; };
+  const mobile = phones.find(isMobile);
+  const wa = social.find(l => l.type === 'whatsapp');
+  if (wa && wa.href) out.push({ name: 'WhatsApp', href: wa.href.split('?')[0] }); // без текста из Яндекса
+  else if (mobile) out.push({ name: 'WhatsApp', href: 'https://wa.me/' + mobile.replace(/\D/g, '') });
+  const tg = social.find(l => l.type === 'telegram');
+  let tgHref = tg && tg.href;
+  // страховка: служебная telegram.org → настоящий юзернейм из readable (@Stilmebel999 → https://t.me/Stilmebel999)
+  if (tgHref && /telegram\.org/.test(tgHref) && !/t\.me/.test(tgHref)) {
+    const un = (tg.readable || '').replace(/^@/, '').trim();
+    tgHref = un ? 'https://t.me/' + un : null;
+  }
+  if (tgHref) out.push({ name: 'Telegram', href: tgHref });
+  else if (mobile) out.push({ name: 'Telegram', href: 'https://t.me/+' + mobile.replace(/\D/g, '') }); // + обязателен: t.me/7… без плюса ведёт на telegram.org
+  const vk = social.find(l => l.type === 'vkontakte');
+  if (vk && vk.href) out.push({ name: 'ВКонтакте', href: vk.href });
+  // MAX — мессенджер (max.ru), правило 16.11.2026: тоже контакт, добавляем всегда
+  const mx = social.find(l => l.type === 'max' || /max\.ru/.test(l.href || ''));
+  if (mx && mx.href) out.push({ name: 'MAX', href: mx.href });
+  return out;
+}
+
+const CH_CLS = { 'WhatsApp': 'wa', 'Telegram': 'tg', 'ВКонтакте': 'vk', 'MAX': 'mx' };
+
+function siteOf(c) {
+  const b = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
+  if (b) return b.url;
+  const s = (c.socialLinks || []).filter(Boolean).find(l => l.type === 'link' || l.type === 'site');
+  return s ? s.href : null;
+}
+
+function hasBooking(c) {
+  return (c.businessLinks || []).filter(Boolean).some(l => l.type === 'booking');
+}
+
+function acc(q) {
+  q = (q || '').trim();
+  if (/а$/.test(q)) return q.slice(0, -1) + 'у';
+  if (/я$/.test(q)) return q.slice(0, -1) + 'ю';
+  return q;
+}
+
+// статусы: снимок + правки из этого браузера (localStorage);
+// статусы живут в облаке Supabase (meta.cloud) — видны со всех устройств без туннеля;
+// компьютер с meta.live остаётся запасным путём, если облака нет в снимке
+function loadLocalStatuses() {
+  try { return JSON.parse(localStorage.getItem('ohotnik_statuses') || '{}'); } catch (e) { return {}; }
+}
+function saveLocalStatuses(st) {
+  try { localStorage.setItem('ohotnik_statuses', JSON.stringify(st)); } catch (e) {}
+}
+
+const LIVE = () => (DATA && DATA.meta && DATA.meta.live) || null;
+const CLOUD = () => (DATA && DATA.meta && DATA.meta.cloud) || null;
+let SERVER_UP = false; // облако (или компьютер, если облака нет) доступен
+
+function cloudHeaders(extra) {
+  const c = CLOUD();
+  return Object.assign({
+    'apikey': c.key,
+    'Authorization': 'Bearer ' + c.key,
+    'Content-Type': 'application/json',
+  }, extra || {});
+}
+
+async function syncFromServer() {
+  const c = CLOUD();
+  if (c) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(c.url + '/rest/v1/statuses?select=*', { headers: cloudHeaders(), signal: ctrl.signal });
+      clearTimeout(t);
+      if (!r.ok) throw new Error('bad status ' + r.status);
+      const rows = await r.json();
+      // строки облака: {id, status, updated}; статус с более свежим updated важнее
+      for (const row of rows) {
+        if (!row || !row.id) continue;
+        const s = DATA.statuses[row.id];
+        if (!s || !s.updated || String(row.updated || '') >= String(s.updated)) {
+          DATA.statuses[row.id] = { status: row.status, updated: row.updated || '' };
+        }
+      }
+      SERVER_UP = true;
+      // перенос: статусы, проставленные в этом браузере раньше (облако о них не знает или старее), отправляем в облако
+      const local = loadLocalStatuses();
+      for (const [id, v] of Object.entries(local)) {
+        const s = DATA.statuses[id];
+        if (v && v.status && (!s || !s.updated || String(v.updated || '') > String(s.updated))) {
+          await pushStatusToServer(id, v.status);
+          DATA.statuses[id] = { status: v.status, updated: v.updated || new Date().toISOString() };
+        }
+      }
+      updateSyncNote();
+      return SERVER_UP;
+    } catch (e) {
+      SERVER_UP = false;
+      updateSyncNote();
+      return false;
+    }
+  }
+  // запасной путь без облака: компьютер из meta.live (туннель)
+  const live = LIVE();
+  if (!live) { SERVER_UP = false; updateSyncNote(); return false; }
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    const r = await fetch(live + '/api/data', { signal: ctrl.signal });
+    clearTimeout(t);
+    if (!r.ok) throw new Error('bad status ' + r.status);
+    const j = await r.json();
+    Object.assign(DATA.statuses, j.statuses || {});
+    SERVER_UP = true;
+    const local = loadLocalStatuses();
+    for (const [id, v] of Object.entries(local)) {
+      const s = DATA.statuses[id];
+      if (v && v.status && (!s || !s.updated || String(v.updated || '') > String(s.updated))) {
+        await pushStatusToServer(id, v.status);
+        DATA.statuses[id] = { status: v.status, updated: v.updated || new Date().toISOString() };
+      }
+    }
+  } catch (e) {
+    SERVER_UP = false;
+  }
+  updateSyncNote();
+  return SERVER_UP;
+}
+
+function updateSyncNote() {
+  const el = document.getElementById('syncNote');
+  if (!el) return;
+  el.textContent = SERVER_UP
+    ? '✓ Статусы в облаке: то, что проставлено здесь, видно на всех устройствах — телефоне, ноутбуке и ПК, без запущенного компьютера.'
+    : 'Облако недоступно (нет интернета или ключ изменился): статусы меняются только в этом браузере. Когда связь появится и страницу обновят — статусы подтянутся из облака.';
+}
+
+async function pushStatusToServer(id, status) {
+  const c = CLOUD();
+  if (c) {
+    try {
+      const updated = new Date().toISOString();
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(c.url + '/rest/v1/statuses', {
+        method: 'POST',
+        headers: cloudHeaders({ 'Prefer': 'resolution=merge-duplicates' }),
+        body: JSON.stringify({ id, status, updated }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(t);
+      if (!r.ok) throw new Error('bad status ' + r.status);
+      SERVER_UP = true;
+      const local = loadLocalStatuses();
+      local[id] = { status, updated };
+      saveLocalStatuses(local);
+    } catch (e) {
+      SERVER_UP = false;
+    }
+    updateSyncNote();
+    return;
+  }
+  const live = LIVE();
+  if (!live) return;
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 5000);
+    await fetch(live + '/api/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(t);
+    SERVER_UP = true;
+  } catch (e) {
+    SERVER_UP = false;
+  }
+  updateSyncNote();
+}
+
+const mockSrc = () => 'mockup.jpg?v=' + encodeURIComponent(
+  (DATA.meta && (DATA.meta.mockv || DATA.meta.collected)) || '1'
+);
+
+async function load() {
+  // без кэша: иначе после обновления мокапа страница показывает старую картинку
+  const r = await fetch('data.json', { cache: 'no-store' });
+  DATA = await r.json();
+  const m = DATA.meta || {};
+  ACC = acc((m.query || '').trim().split(/\s+/)[0]) || ACC;
+  const niche = m.niche || '';
+  document.getElementById('title').textContent = niche ? 'Hunter Works — ' + niche : 'Hunter Works';
+  const nl = document.getElementById('nicheLink');
+  if (niche === 'маникюр') { nl.textContent = '← Мебель'; nl.href = '../'; nl.style.display = ''; }
+  else if (niche) { nl.textContent = 'Маникюр →'; nl.href = 'manicure/'; nl.style.display = ''; }
+  // вид восстанавливается после обновления страницы (правило 16.11.2026: сброса больше нет)
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('hw_view') || '{}'); } catch (e) { saved = {}; }
+  filter = saved.filter || 'all';
+  fStatus = saved.fStatus !== undefined && saved.fStatus !== null ? saved.fStatus : 'Новый';
+  fSort = saved.fSort || 'idx';
+  document.getElementById('fStatus').value = fStatus;
+  document.getElementById('fSort').value = fSort;
+  document.querySelectorAll('.chip').forEach(x => x.classList.toggle('on', x.dataset.f === filter));
+  const st = Object.assign({}, DATA.statuses || {}, loadLocalStatuses());
+  DATA.statuses = st;
+  DATA.companies.forEach(c => {
+    c.hasSite = !!siteOf(c);
+    c.channels = channelsOf(c);
+    c.st = (st[c.id] || {}).status || 'Новый';
+    c.street = streetOf(c);
+  });
+  renderCounters();
+  render();
+  renderPult();
+  // обновляем статусы с компьютера, если он доступен (сервер важнее localStorage)
+  const wasUp = SERVER_UP;
+  if (await syncFromServer()) {
+    DATA.companies.forEach(c => {
+      c.st = (DATA.statuses[c.id] || {}).status || 'Новый';
+    });
+    renderCounters();
+    render();
+    renderPult();
+  } else if (wasUp) {
+    render();
+    renderPult();
+  }
+  const img = new Image();
+  img.onload = () => { document.getElementById('shotBox').innerHTML = '<img class="shotimg" src="' + mockSrc() + '" width="640">'; };
+  img.src = mockSrc();
+}
+
+function statusClass(st) {
+  if (st === 'Отправлено') return 'sent';
+  if (st === 'Ещё не отправлено') return 'work';
+  return '';
+}
+
+function renderCounters() {
+  const cs = DATA.companies;
+  const noSite = cs.filter(c => !c.hasSite || c.siteDead).length;
+  const sent = cs.filter(c => c.st === 'Отправлено').length;
+  document.getElementById('counters').innerHTML =
+    cnt(cs.length, 'всего в базе') + cnt(noSite, 'без сайта') +
+    cnt(sent, 'отправлено');
+}
+const cnt = (n, label) => `<div class="counter"><b>${n}</b><span>${label}</span></div>`;
+
+function visible() {
+  let cs = DATA.companies;
+  if (filter === 'nosite') cs = cs.filter(c => !c.hasSite || c.siteDead);
+  if (filter === 'notsent') cs = cs.filter(c => c.st === 'Ещё не отправлено');
+  if (fStatus) cs = cs.filter(c => c.st === fStatus);
+  if (fSort === 'vk' || fSort === 'max') {
+    // канал первым — но только среди неотправленных; «Отправлено» всегда в конце
+    const chName = fSort === 'vk' ? 'ВКонтакте' : 'MAX';
+    const rank = c => ((c.st === 'Отправлено') ? 10 : 0) + ((c.channels || []).some(ch => ch.name === chName) ? 0 : 1);
+    cs = [...cs].sort((a, b) => rank(a) - rank(b));
+  }
+  return cs;
+}
+
+function render() {
+  const cs = visible();
+  document.getElementById('list').innerHTML = cs.map((c, i) => {
+    const msg = tpl(c, c.street);
+    const hook = (c.reviewSnippets || [])[0];
+    const prices = (c.prices || []).slice(0, 4).map(p => p.name + ': ' + p.value).join(' · ');
+    return `<div class="card ${statusClass(c.st)}" data-id="${c.id}">
+      <div class="head">
+        <span class="num">№${i + 1}</span>
+        <h3>${esc(c.title)}</h3>
+        <span class="rating"><b>${c.rating ?? '—'}</b> · ${(c.reviews || 0)} отзывов</span>
+      </div>
+      <div class="addr">${esc(c.fullAddress || '')}</div>
+      <div>
+        ${c.hasSite
+          ? (c.siteDead
+            ? `<span class="pill site-dead">сайт не работает</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`
+            : `<span class="pill has-site">сайт есть</span> <a href="${esc(siteOf(c))}" target="_blank" rel="noopener" style="font-size:12px">${esc(shortUrl(siteOf(c)))}</a>`)
+          : '<span class="pill no-site">сайта нет</span>'}
+        ${hasBooking(c) ? '<span class="pill booking">онлайн-запись в Яндексе</span>' : ''}
+      </div>
+      <div class="row-label">Куда написать</div>
+      <div>
+        ${c.channels.length
+          ? c.channels.map(ch => `<a class="msg-btn ${CH_CLS[ch.name] || ''}" target="_blank" rel="noopener" href="${esc(ch.href)}">${ch.name}</a>`).join('')
+          : (c.phones && c.phones.length ? '<span style="font-size:13px;color:var(--soft)">только телефон: ' + esc(c.phones.join(', ')) + '</span>' : '<span style="font-size:13px;color:var(--soft)">контакт для сообщений не найден</span>')}
+      </div>
+      ${prices ? `<div class="row-label">Цены</div><div style="font-size:13px">${esc(prices)}</div>` : ''}
+      ${hook ? `<div class="hook"><i>крючок из отзывов:</i> «${esc(hook.slice(0, 220))}…»</div>` : ''}
+      <div class="row-label">Сообщение (утверждённый шаблон)</div>
+      <textarea data-ta="${c.id}">${esc(msg)}</textarea>
+      <div class="actions">
+        <button class="btn" data-copyimg="${c.id}">Скопировать картинку</button>
+        <button class="btn gray" data-copy="${c.id}">Скопировать текст</button>
+        <span style="flex:1"></span>
+        <span style="font-size:13px;color:var(--soft)">Статус</span>
+        <select data-st="${c.id}">${STATUSES.map(s => `<option ${s === c.st ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      </div>
+    </div>`;
+  }).join('') || '<p style="color:var(--soft)">Под фильтр ничего не попало.</p>';
+}
+
+/* ---------- Пульт ---------- */
+function renderPult() {
+  const cs = DATA.companies;
+  const bySt = {};
+  STATUSES.forEach(s => bySt[s] = cs.filter(c => c.st === s).length);
+  const total = cs.length || 1;
+  document.getElementById('pBar').innerHTML =
+    STATUSES.map(s => `<div style="width:${(bySt[s] / total * 100).toFixed(1)}%;background:${ST_COLORS[s]}"></div>`).join('');
+  document.getElementById('pLegend').innerHTML =
+    STATUSES.map(s => `<span><i style="background:${ST_COLORS[s]}"></i>${s}: <b>${bySt[s]}</b></span>`).join('');
+  const rows = cs
+    .filter(c => c.st !== 'Новый')
+    .sort((a, b) => (a.st < b.st ? -1 : 1))
+    .slice(0, 30);
+  document.getElementById('pRows').innerHTML = rows.length
+    ? rows.map(c => `<div class="strow">
+        <span class="nm">${esc(c.title)} <span class="sub">· ${esc(c.street)}</span></span>
+        <span class="sub">${esc(c.st)}</span>
+        <select data-pst="${c.id}">${STATUSES.map(s => `<option ${s === c.st ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      </div>`).join('')
+    : '<div class="note" style="padding:6px 0">Пока все карточки в статусе «Новый».</div>';
+}
+
+/* ---------- события ---------- */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  document.getElementById('view-hunt').style.display = t.dataset.tab === 'hunt' ? '' : 'none';
+  document.getElementById('view-pult').style.display = t.dataset.tab === 'pult' ? '' : 'none';
+}));
+
+const saveView = () => { try { localStorage.setItem('hw_view', JSON.stringify({ filter, fStatus, fSort })); } catch (e) {} };
+
+document.querySelectorAll('.chip').forEach(ch => ch.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(x => x.classList.remove('on'));
+  ch.classList.add('on');
+  filter = ch.dataset.f;
+  // «Все»/«Без сайта» → «Новый»; «Ещё не отправлено» → «Ещё не отправлено» (очередь, которую ты сам наполняешь)
+  fStatus = filter === 'notsent' ? 'Ещё не отправлено' : 'Новый';
+  document.getElementById('fStatus').value = fStatus;
+  saveView();
+  render();
+}));
+document.getElementById('fStatus').addEventListener('change', e => { fStatus = e.target.value; saveView(); render(); });
+document.getElementById('fSort').addEventListener('change', e => { fSort = e.target.value; saveView(); render(); });
+
+document.getElementById('list').addEventListener('click', async e => {
+  const imgId = e.target.dataset.copyimg;
+  const txtId = e.target.dataset.copy;
+  const btn = e.target;
+  const setBtn = (label, back) => {
+    btn.textContent = label;
+    setTimeout(() => { btn.textContent = back; }, 3000);
+  };
+  if (imgId) {
+    // мокап в буфер: перекодируем в честный PNG (мокап может быть и jpg)
+    try {
+      const imgRes = await fetch(mockSrc());
+      if (!imgRes.ok) throw new Error('no shot');
+      const bmp = await createImageBitmap(await imgRes.blob());
+      const cnv = document.createElement('canvas');
+      cnv.width = bmp.width; cnv.height = bmp.height;
+      cnv.getContext('2d').drawImage(bmp, 0, 0);
+      const png = await new Promise(r => cnv.toBlob(r, 'image/png'));
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': png })]);
+      setBtn('Картинка в буфере ✓', 'Скопировать картинку');
+    } catch (err) {
+      setBtn('Мокап не загрузился — обнови страницу', 'Скопировать картинку');
+    }
+  } else if (txtId) {
+    const ta = document.querySelector(`textarea[data-ta="${txtId}"]`);
+    try {
+      await navigator.clipboard.writeText(ta.value);
+      setBtn('Текст в буфере ✓', 'Скопировать текст');
+    } catch (err) {
+      ta.select();
+      setBtn('Выделено — Ctrl+C', 'Скопировать текст');
+    }
+  }
+});
+
+async function changeStatus(id, status) {
+  const local = loadLocalStatuses();
+  local[id] = { status, updated: new Date().toISOString() };
+  saveLocalStatuses(local);
+  DATA.statuses[id] = local[id];
+  const c = DATA.companies.find(x => x.id === id);
+  c.st = status;
+  renderCounters();
+  renderPult();
+  // пишем на компьютер, если он доступен — тогда статус увидят все устройства
+  pushStatusToServer(id, status);
+}
+document.getElementById('list').addEventListener('change', e => {
+  const id = e.target.dataset.st;
+  if (id) {
+    changeStatus(id, e.target.value);
+    const card = e.target.closest('.card');
+    card.classList.remove('sent', 'work');
+    if (statusClass(e.target.value)) card.classList.add(statusClass(e.target.value));
+  }
+});
+document.getElementById('pRows').addEventListener('change', e => {
+  const id = e.target.dataset.pst;
+  if (id) changeStatus(id, e.target.value);
+});
+
+/* «Открыть папку со снимками» — работает, если на этом ПК запущен локальный Охотник (:4800) */
+document.getElementById('mockFolderBtn').addEventListener('click', async () => {
+  const note = document.getElementById('mockFolderNote');
+  note.style.display = '';
+  note.textContent = 'Открываю папку…';
+  try {
+    const r = await fetch('http://localhost:4800/api/reveal', { method: 'POST' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    note.textContent = 'Проводник открыт на компьютере в папке shots. Брось туда снимок и нажми «Обновить список» на пульте.';
+  } catch (e) {
+    note.innerHTML = 'Локальный Охотник не отвечает. Включи сервер на ПК (<code>node server.js</code> — или батник «Запуск серверов») и нажми ещё раз. Открываю локальный пульт…';
+    setTimeout(() => { window.open('http://localhost:4800/', '_blank'); }, 700);
+  }
+});
+
+/* экспорт: собираем xlsx прямо в браузере */
+document.getElementById('xlsxGo').addEventListener('click', () => {
+  const rows = DATA.companies.map((c, i) => {
+    const site = (c.businessLinks || []).filter(Boolean).find(l => l.type === 'link' && l.url);
+    const soc = type => (c.socialLinks || []).filter(Boolean).find(l => l.type === type);
+    const st = DATA.statuses[c.id] || {};
+    return {
+      '№': i + 1,
+      'Название': c.title,
+      'Адрес': c.fullAddress,
+      'Телефон': (c.phones || []).join(', '),
+      'WhatsApp': (soc('whatsapp') || {}).readable || (((soc('whatsapp') || {}).href || '').split('?')[0]),
+      'Telegram': (soc('telegram') || {}).readable || ((soc('telegram') || {}).href || ''),
+      'ВКонтакте': (soc('vkontakte') || {}).readable || ((soc('vkontakte') || {}).href || ''),
+      'Сайт': site ? site.url : 'сайта нет',
+      'Рейтинг': c.rating,
+      'Отзывов': c.reviews,
+      'Цены': (c.prices || []).map(p => p.name + ': ' + p.value).join('; '),
+      'Часы': c.hours || '',
+      'Статус': st.status || 'Новый',
+      'Статус обновлён': st.updated || ''
+    };
+  });
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [{ wch: 5 }, { wch: 28 }, { wch: 45 }, { wch: 18 }, { wch: 18 }, { wch: 18 }, { wch: 22 }, { wch: 24 }, { wch: 8 }, { wch: 8 }, { wch: 40 }, { wch: 24 }, { wch: 12 }, { wch: 20 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Охота');
+  XLSX.writeFile(wb, 'ohotnik-export.xlsx');
+});
+
+function shortUrl(u) { return u.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+load();
+</script>
+</body>
+</html>
